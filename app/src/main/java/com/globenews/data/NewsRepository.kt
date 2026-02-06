@@ -11,8 +11,7 @@ import java.util.concurrent.TimeUnit
 
 class NewsRepository(private val context: Context) {
 
-    // Demo API key for GNews - replace with your own
-    private val apiKey = "DEMO_API_KEY_REPLACE_ME"
+    private val apiKey = "0689e03db8a6390e29c7b52175b6c850"
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)
