@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.17.0/dist/maplibre-gl.css">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -20,7 +20,7 @@
 <body>
 <div id="globe"></div>
 
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/maplibre-gl@5.17.0/dist/maplibre-gl.js"></script>
 <script>
 (function() {
   let map = null;
@@ -41,6 +41,7 @@
       container: 'globe',
       style: {
         version: 8,
+        projection: { type: 'globe' },
         glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
         sources: {
           'satellite': {
@@ -56,25 +57,26 @@
           id: 'satellite-layer',
           type: 'raster',
           source: 'satellite'
-        }]
+        }],
+        sky: {
+          'atmosphere-blend': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            0, 1,
+            5, 1,
+            7, 0
+          ]
+        },
+        light: {
+          anchor: 'map',
+          position: [1.5, 90, 80]
+        }
       },
       center: [0, 20],
       zoom: 1.5,
-      projection: 'globe',
       attributionControl: false,
       maxPitch: 85
-    });
-
-    // Atmosphere effect
-    map.on('style.load', function() {
-      map.setFog({
-        range: [0.5, 10],
-        color: 'rgba(186, 210, 235, 0.2)',
-        'high-color': 'rgba(36, 92, 223, 0.4)',
-        'horizon-blend': 0.03,
-        'space-color': 'rgb(10, 10, 26)',
-        'star-intensity': 0.6
-      });
     });
 
     map.on('load', function() {

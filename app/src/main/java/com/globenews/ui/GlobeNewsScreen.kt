@@ -49,7 +49,7 @@ fun GlobeNewsScreen(viewModel: GlobeViewModel) {
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF0a0a1a))) {
         // Globe WebView - fullscreen
         GlobeWebView(
-            stories = uiState.visibleStories,
+            stories = uiState.allStories,
             flyToLat = uiState.flyToLat,
             flyToLng = uiState.flyToLng,
             flyToAltitude = uiState.flyToAltitude,
