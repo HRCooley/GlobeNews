@@ -1,0 +1,461 @@
+[
+  {
+    "title": "UN General Assembly Convenes for Emergency Climate Session",
+    "source": "Reuters",
+    "summary": "World leaders gather in New York to discuss accelerating climate commitments amid record global temperatures.",
+    "url": "https://reuters.com",
+    "latitude": 40.7489,
+    "longitude": -73.9680,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "EU Reaches Agreement on Digital Markets Regulation",
+    "source": "BBC News",
+    "summary": "European Union finalizes landmark tech regulation affecting major platforms operating in the bloc.",
+    "url": "https://bbc.com/news",
+    "latitude": 50.8503,
+    "longitude": 4.3517,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "G20 Summit Addresses Global Economic Recovery",
+    "source": "Associated Press",
+    "summary": "Finance ministers from G20 nations meet to coordinate economic stimulus and trade policies.",
+    "url": "https://apnews.com",
+    "latitude": -15.7975,
+    "longitude": -47.8919,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "WHO Announces New Global Health Initiative",
+    "source": "Al Jazeera",
+    "summary": "World Health Organization launches program to improve pandemic preparedness in developing nations.",
+    "url": "https://aljazeera.com",
+    "latitude": 46.2044,
+    "longitude": 6.1432,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "International Space Station Celebrates 25 Years",
+    "source": "NASA News",
+    "summary": "Astronauts mark quarter century of continuous human presence in orbit with special ceremony.",
+    "url": "https://nasa.gov",
+    "latitude": 28.5721,
+    "longitude": -80.6480,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Global Shipping Routes Disrupted by Red Sea Tensions",
+    "source": "Financial Times",
+    "summary": "Major shipping companies reroute vessels around Africa as security concerns persist in the Red Sea.",
+    "url": "https://ft.com",
+    "latitude": 13.0,
+    "longitude": 43.0,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Arctic Ice Reaches Record Low for Winter Season",
+    "source": "The Guardian",
+    "summary": "Scientists report unprecedented ice melt in the Arctic, raising concerns about accelerating climate change.",
+    "url": "https://theguardian.com",
+    "latitude": 78.0,
+    "longitude": 16.0,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "NATO Allies Increase Defense Spending Commitments",
+    "source": "Deutsche Welle",
+    "summary": "Alliance members agree to boost military budgets in response to evolving security challenges.",
+    "url": "https://dw.com",
+    "latitude": 50.8503,
+    "longitude": 4.3517,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Trans-Pacific Trade Deal Expands to New Members",
+    "source": "Nikkei Asia",
+    "summary": "Several new countries join the comprehensive trade agreement, expanding economic cooperation across the Pacific.",
+    "url": "https://asia.nikkei.com",
+    "latitude": 35.6762,
+    "longitude": 139.6503,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Global Semiconductor Shortage Shows Signs of Easing",
+    "source": "Bloomberg",
+    "summary": "New fabrication plants coming online in multiple countries begin to alleviate chip supply constraints.",
+    "url": "https://bloomberg.com",
+    "latitude": 25.0330,
+    "longitude": 121.5654,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "US Federal Reserve Signals Interest Rate Decision",
+    "source": "CNBC",
+    "summary": "Fed chair indicates potential rate adjustments as inflation data shows mixed signals across the economy.",
+    "url": "https://cnbc.com",
+    "latitude": 38.8951,
+    "longitude": -77.0364,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "UK Parliament Debates National Infrastructure Bill",
+    "source": "BBC News",
+    "summary": "MPs discuss major investment in transport and energy infrastructure across the United Kingdom.",
+    "url": "https://bbc.com/news",
+    "latitude": 51.5074,
+    "longitude": -0.1278,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "India Launches Ambitious Renewable Energy Program",
+    "source": "The Hindu",
+    "summary": "Government announces plan to add 100GW of solar capacity within five years across multiple states.",
+    "url": "https://thehindu.com",
+    "latitude": 28.6139,
+    "longitude": 77.2090,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Brazil Amazon Deforestation Rate Drops Significantly",
+    "source": "Folha de São Paulo",
+    "summary": "New satellite data shows substantial reduction in deforestation rates in the Amazon rainforest.",
+    "url": "https://folha.uol.com.br",
+    "latitude": -3.4653,
+    "longitude": -62.2159,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Japan Unveils Economic Stimulus Package",
+    "source": "Nikkei",
+    "summary": "Japanese government announces comprehensive economic measures to boost domestic consumption and wages.",
+    "url": "https://nikkei.com",
+    "latitude": 35.6762,
+    "longitude": 139.6503,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Germany Accelerates Green Energy Transition",
+    "source": "Der Spiegel",
+    "summary": "Federal government fast-tracks approval for wind and solar projects to meet climate targets.",
+    "url": "https://spiegel.de",
+    "latitude": 52.5200,
+    "longitude": 13.4050,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Australia Implements New Immigration Policies",
+    "source": "ABC News Australia",
+    "summary": "Federal government introduces revised visa programs to address skilled worker shortages.",
+    "url": "https://abc.net.au",
+    "latitude": -35.2809,
+    "longitude": 149.1300,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "France Announces Pension Reform Amendments",
+    "source": "Le Monde",
+    "summary": "French government proposes modifications to controversial pension reform after nationwide protests.",
+    "url": "https://lemonde.fr",
+    "latitude": 48.8566,
+    "longitude": 2.3522,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Canada Invests in Northern Development",
+    "source": "CBC News",
+    "summary": "Federal budget allocates billions for infrastructure and services in Canada's northern territories.",
+    "url": "https://cbc.ca",
+    "latitude": 45.4215,
+    "longitude": -75.6972,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "South Korea Expands Semiconductor Industry Support",
+    "source": "Korea Herald",
+    "summary": "Government unveils massive incentive package to maintain dominance in global chip manufacturing.",
+    "url": "https://koreaherald.com",
+    "latitude": 37.5665,
+    "longitude": 126.9780,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Mexico Strengthens Border Security Measures",
+    "source": "El Universal",
+    "summary": "National guard deployment expanded along southern border to manage migration flows.",
+    "url": "https://eluniversal.com.mx",
+    "latitude": 19.4326,
+    "longitude": -99.1332,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Nigeria Election Commission Announces Results",
+    "source": "Channels TV",
+    "summary": "Electoral body releases final tallies for gubernatorial races across multiple states.",
+    "url": "https://channelstv.com",
+    "latitude": 9.0579,
+    "longitude": 7.4951,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Egypt Opens New Administrative Capital",
+    "source": "Al-Ahram",
+    "summary": "Government begins relocating ministries to the new purpose-built capital city east of Cairo.",
+    "url": "https://english.ahram.org.eg",
+    "latitude": 30.0131,
+    "longitude": 31.7625,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "New York City Opens New Waterfront Park",
+    "source": "NY Times",
+    "summary": "Manhattan's west side gains 5-acre green space with river views and community facilities.",
+    "url": "https://nytimes.com",
+    "latitude": 40.7580,
+    "longitude": -74.0000,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "London Underground Expands Elizabeth Line Service",
+    "source": "Evening Standard",
+    "summary": "Transport for London increases frequency on the Elizabeth line to meet growing demand.",
+    "url": "https://standard.co.uk",
+    "latitude": 51.5155,
+    "longitude": -0.0922,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Tokyo Shibuya District Unveils Smart City Features",
+    "source": "Japan Times",
+    "summary": "Shibuya ward introduces AI-powered traffic management and public Wi-Fi across the district.",
+    "url": "https://japantimes.co.jp",
+    "latitude": 35.6580,
+    "longitude": 139.7016,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Paris Metro Line 15 Construction Milestone Reached",
+    "source": "Le Parisien",
+    "summary": "Grand Paris Express project completes major tunnel boring phase for the southern section.",
+    "url": "https://leparisien.fr",
+    "latitude": 48.8400,
+    "longitude": 2.2900,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Sydney Harbor Bridge Celebrates 95th Anniversary",
+    "source": "Sydney Morning Herald",
+    "summary": "Celebrations planned across the city to mark the iconic bridge's milestone anniversary.",
+    "url": "https://smh.com.au",
+    "latitude": -33.8523,
+    "longitude": 151.2108,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "San Francisco Approves New Housing Development",
+    "source": "SF Chronicle",
+    "summary": "City council green-lights 2,000-unit mixed-use development in the South of Market neighborhood.",
+    "url": "https://sfchronicle.com",
+    "latitude": 37.7749,
+    "longitude": -122.4000,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Berlin Opens Major Contemporary Art Museum",
+    "source": "Berliner Zeitung",
+    "summary": "New museum in Mitte district features works from international and emerging German artists.",
+    "url": "https://berliner-zeitung.de",
+    "latitude": 52.5244,
+    "longitude": 13.4105,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Mumbai Metro Phase 3 Begins Operations",
+    "source": "Times of India",
+    "summary": "New metro line connecting suburbs to downtown begins carrying passengers, reducing commute times.",
+    "url": "https://timesofindia.com",
+    "latitude": 19.0760,
+    "longitude": 72.8777,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Lagos Completes Major Road Reconstruction",
+    "source": "Punch Newspapers",
+    "summary": "Multi-year project to rebuild key highway corridor finished, easing traffic congestion in the city.",
+    "url": "https://punchng.com",
+    "latitude": 6.5244,
+    "longitude": 3.3792,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Chicago River Walk Extension Opens to Public",
+    "source": "Chicago Tribune",
+    "summary": "New pedestrian pathway along the river adds restaurants and green spaces to the downtown area.",
+    "url": "https://chicagotribune.com",
+    "latitude": 41.8882,
+    "longitude": -87.6233,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Dubai Launches Autonomous Public Transit System",
+    "source": "Gulf News",
+    "summary": "Self-driving buses begin regular service connecting downtown to the new business district.",
+    "url": "https://gulfnews.com",
+    "latitude": 25.2048,
+    "longitude": 55.2708,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Singapore Gardens by the Bay Expansion Complete",
+    "source": "Straits Times",
+    "summary": "New 15-hectare section opens with tropical rainforest conservatory and educational center.",
+    "url": "https://straitstimes.com",
+    "latitude": 1.2816,
+    "longitude": 103.8636,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Moscow Inaugurates New Concert Hall Complex",
+    "source": "TASS",
+    "summary": "State-of-the-art performing arts venue opens in the Zaryadye district near the Kremlin.",
+    "url": "https://tass.com",
+    "latitude": 55.7517,
+    "longitude": 37.6293,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Toronto Waterfront Revitalization Project Advances",
+    "source": "Globe and Mail",
+    "summary": "Major development transforms former industrial port lands into mixed-use community with parks.",
+    "url": "https://theglobeandmail.com",
+    "latitude": 43.6426,
+    "longitude": -79.3871,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Seoul Opens World's Largest Underground Shopping District",
+    "source": "Korea JoongAng Daily",
+    "summary": "New retail complex beneath Gangnam connects three subway stations with 500 stores.",
+    "url": "https://koreajoongangdaily.joins.com",
+    "latitude": 37.4979,
+    "longitude": 127.0276,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "OPEC+ Reaches New Oil Production Agreement",
+    "source": "Reuters",
+    "summary": "Major oil producers agree to adjust output targets to stabilize global energy markets.",
+    "url": "https://reuters.com",
+    "latitude": 24.4539,
+    "longitude": 54.3773,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Global Coral Reef Restoration Effort Launches",
+    "source": "Nature",
+    "summary": "International coalition announces billion-dollar initiative to restore damaged coral reef systems worldwide.",
+    "url": "https://nature.com",
+    "latitude": -16.5004,
+    "longitude": 145.7500,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "China Unveils Next-Generation High-Speed Rail",
+    "source": "Xinhua",
+    "summary": "New maglev train reaches 600 km/h in testing, connecting Beijing to Shanghai in under two hours.",
+    "url": "https://xinhuanet.com",
+    "latitude": 39.9042,
+    "longitude": 116.4074,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Buenos Aires Launches Urban Farming Initiative",
+    "source": "Clarín",
+    "summary": "City government converts vacant lots into community gardens to improve food security.",
+    "url": "https://clarin.com",
+    "latitude": -34.6037,
+    "longitude": -58.3816,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Istanbul Bosphorus Bridge Gets Earthquake Retrofit",
+    "source": "Daily Sabah",
+    "summary": "Engineers begin seismic strengthening of the iconic bridge connecting Europe and Asia.",
+    "url": "https://dailysabah.com",
+    "latitude": 41.0451,
+    "longitude": 29.0340,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Kenya Launches Digital Identity System",
+    "source": "Nation Africa",
+    "summary": "Government rolls out biometric ID program aimed at improving access to public services nationwide.",
+    "url": "https://nation.africa",
+    "latitude": -1.2921,
+    "longitude": 36.8219,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "International Fusion Energy Breakthrough Announced",
+    "source": "Science Magazine",
+    "summary": "Research consortium achieves sustained fusion reaction, marking major milestone toward clean energy.",
+    "url": "https://sciencemag.org",
+    "latitude": 43.7102,
+    "longitude": 5.7689,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Hong Kong Completes New Airport Terminal",
+    "source": "South China Morning Post",
+    "summary": "Third runway system begins operations, significantly expanding the airport's capacity.",
+    "url": "https://scmp.com",
+    "latitude": 22.3080,
+    "longitude": 113.9185,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "United Nations Adopts Ocean Protection Treaty",
+    "source": "BBC News",
+    "summary": "Historic agreement to protect marine biodiversity in international waters signed by 150 nations.",
+    "url": "https://bbc.com/news",
+    "latitude": 40.7489,
+    "longitude": -73.9680,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Los Angeles Expands Electric Bus Fleet",
+    "source": "LA Times",
+    "summary": "Metro adds 200 new electric buses as city pushes toward zero-emission public transit by 2030.",
+    "url": "https://latimes.com",
+    "latitude": 34.0522,
+    "longitude": -118.2437,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Nairobi Tech Hub Attracts Record Investment",
+    "source": "TechCabal",
+    "summary": "Silicon Savannah sees surge in venture capital as African tech startups gain global attention.",
+    "url": "https://techcabal.com",
+    "latitude": -1.3000,
+    "longitude": 36.8200,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Russia-China Trade Volume Hits New Record",
+    "source": "Reuters",
+    "summary": "Bilateral trade between Russia and China surpasses expectations, reshaping global trade patterns.",
+    "url": "https://reuters.com",
+    "latitude": 55.7558,
+    "longitude": 37.6173,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Bangkok Floating Market Gets Heritage Status",
+    "source": "Bangkok Post",
+    "summary": "UNESCO designates Damnoen Saduak floating market as intangible cultural heritage site.",
+    "url": "https://bangkokpost.com",
+    "latitude": 13.5181,
+    "longitude": 99.9577,
+    "scope": "LOCAL"
+  }
+]
