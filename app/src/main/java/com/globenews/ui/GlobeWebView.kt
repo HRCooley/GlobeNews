@@ -12,6 +12,7 @@ import android.webkit.WebViewClient
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
@@ -44,6 +45,7 @@ fun GlobeWebView(
     val currentOnGlobeReady = rememberUpdatedState(onGlobeReady)
 
     val mainHandler = remember { Handler(Looper.getMainLooper()) }
+    val isMapReady = remember { mutableStateOf(false) }
 
     val webView = remember {
         WebView(context).apply {
@@ -94,7 +96,10 @@ fun GlobeWebView(
 
             @JavascriptInterface
             fun onGlobeReady() {
-                mainHandler.post { currentOnGlobeReady.value() }
+                mainHandler.post {
+                    isMapReady.value = true
+                    currentOnGlobeReady.value()
+                }
             }
         }
     }
@@ -108,9 +113,9 @@ fun GlobeWebView(
         }
     }
 
-    // Update stories whenever they change
-    LaunchedEffect(stories) {
-        if (stories.isNotEmpty()) {
+    // Update stories whenever they change or when the map becomes ready
+    LaunchedEffect(stories, isMapReady.value) {
+        if (stories.isNotEmpty() && isMapReady.value) {
             val jsonArray = JSONArray()
             for (story in stories) {
                 val obj = JSONObject()

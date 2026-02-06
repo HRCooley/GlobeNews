@@ -192,21 +192,36 @@
         try { Android.onMarkerTapped(id); } catch(ex) {}
       });
 
+      // Apply any markers that arrived before the map was ready
+      if (currentMarkers.length > 0) {
+        var features = [];
+        for (var i = 0; i < currentMarkers.length; i++) {
+          var m = currentMarkers[i];
+          features.push({
+            type: 'Feature',
+            geometry: { type: 'Point', coordinates: [m.lng, m.lat] },
+            properties: { id: m.id, title: m.title, source: m.source, scope: m.scope }
+          });
+        }
+        map.getSource('stories').setData({
+          type: 'FeatureCollection',
+          features: features
+        });
+      }
+
       // Notify Android that globe is ready
       try { Android.onGlobeReady(); } catch(e) {}
     });
 
-    // Track zoom changes
+    // Track zoom changes — use 'moveend' only (fires after zoom too)
     let lastReportedAlt = altitudeFromZoom(1.5);
-    function reportZoom() {
+    map.on('moveend', function() {
       const alt = altitudeFromZoom(map.getZoom());
-      if (Math.abs(alt - lastReportedAlt) > 0.01) {
+      if (Math.abs(alt - lastReportedAlt) > 0.05) {
         lastReportedAlt = alt;
         try { Android.onZoomChanged(String(alt)); } catch(e) {}
       }
-    }
-    map.on('zoomend', reportZoom);
-    map.on('moveend', reportZoom);
+    });
   }
 
   window.updateMarkers = function(jsonString) {
