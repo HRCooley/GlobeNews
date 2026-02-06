@@ -3,6 +3,7 @@ package com.globenews.ui
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
@@ -67,7 +68,9 @@ fun GlobeWebView(
                 try {
                     val alt = altitude.toDouble()
                     mainHandler.post { currentOnZoomChanged.value(alt) }
-                } catch (_: Exception) {}
+                } catch (e: Exception) {
+                    Log.w("GlobeWebView", "Failed to parse zoom altitude: $altitude", e)
+                }
             }
 
             @JavascriptInterface
@@ -84,7 +87,9 @@ fun GlobeWebView(
                         ids.add(arr.getString(i))
                     }
                     mainHandler.post { currentOnClusterTapped.value(ids) }
-                } catch (_: Exception) {}
+                } catch (e: Exception) {
+                    Log.w("GlobeWebView", "Failed to parse cluster IDs: $idsJson", e)
+                }
             }
 
             @JavascriptInterface
