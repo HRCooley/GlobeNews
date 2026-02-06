@@ -19,6 +19,7 @@ data class GlobeUiState(
     val articleUrl: String? = null,
     val articleTitle: String = "",
     val isLoading: Boolean = true,
+    val globeReady: Boolean = false,
     val zoomLevel: Double = 1.5,
     val searchQuery: String = "",
     val flyToLat: Double? = null,
@@ -123,5 +124,9 @@ class GlobeViewModel(application: Application) : AndroidViewModel(application) {
             flyToLng = null,
             flyToAltitude = null
         )
+    }
+
+    fun onGlobeReady() {
+        _uiState.value = _uiState.value.copy(globeReady = true)
     }
 }

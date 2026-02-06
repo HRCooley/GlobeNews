@@ -68,6 +68,7 @@
   let currentMarkers = [];
   let globe = null;
   let lastAltitude = 2.5;
+  let globeReady = false;
 
   function clusterMarkers(markers, altitude) {
     if (altitude < 0.05) return markers.map(m => ({ ...m, count: 1, clustered: [m] }));
@@ -99,7 +100,7 @@
 
   function initGlobe() {
     globe = Globe()
-      .globeImageUrl('https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x5400x2700.jpg')
+      .globeImageUrl('https://unpkg.com/three-globe@2.35.0/example/img/earth-blue-marble.jpg')
       .bumpImageUrl('https://unpkg.com/three-globe@2.35.0/example/img/earth-topology.png')
       .backgroundImageUrl('https://unpkg.com/three-globe@2.35.0/example/img/night-sky.png')
       .showAtmosphere(true)
@@ -142,6 +143,10 @@
         return el;
       })
       .enablePointerInteraction(false)
+      .onGlobeReady(function() {
+        globeReady = true;
+        try { Android.onGlobeReady(); } catch(e) {}
+      })
       (document.getElementById('globe'));
 
     // Monitor altitude changes

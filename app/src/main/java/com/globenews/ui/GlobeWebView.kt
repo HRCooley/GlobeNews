@@ -30,6 +30,7 @@ fun GlobeWebView(
     onZoomChanged: (Double) -> Unit,
     onStoryTapped: (String) -> Unit,
     onClusterTapped: (List<String>) -> Unit,
+    onGlobeReady: () -> Unit,
     onFlyToConsumed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -39,6 +40,7 @@ fun GlobeWebView(
     val currentOnZoomChanged = rememberUpdatedState(onZoomChanged)
     val currentOnStoryTapped = rememberUpdatedState(onStoryTapped)
     val currentOnClusterTapped = rememberUpdatedState(onClusterTapped)
+    val currentOnGlobeReady = rememberUpdatedState(onGlobeReady)
 
     val mainHandler = remember { Handler(Looper.getMainLooper()) }
 
@@ -83,6 +85,11 @@ fun GlobeWebView(
                     }
                     mainHandler.post { currentOnClusterTapped.value(ids) }
                 } catch (_: Exception) {}
+            }
+
+            @JavascriptInterface
+            fun onGlobeReady() {
+                mainHandler.post { currentOnGlobeReady.value() }
             }
         }
     }
