@@ -23,14 +23,14 @@
 <script src="https://unpkg.com/maplibre-gl@5.17.0/dist/maplibre-gl.js"></script>
 <script>
 (function() {
-  let map = null;
-  let allMarkers = [];
-  let mapReady = false;
+  var map = null;
+  var allMarkers = [];
+  var mapReady = false;
 
   // Zoom thresholds — MapLibre zoom levels
-  // zoom < 3:  globe/hemisphere view  → INTERNATIONAL only
-  // zoom 3-5:  continent/region view  → + NATIONAL
-  // zoom >= 5: country/city view      → + LOCAL (everything)
+  // zoom < 3:  globe/hemisphere view  -> INTERNATIONAL only
+  // zoom 3-5:  continent/region view  -> + NATIONAL
+  // zoom >= 5: country/city view      -> + LOCAL (everything)
   var ZOOM_SHOW_NATIONAL = 3;
   var ZOOM_SHOW_LOCAL = 5;
 
@@ -82,7 +82,6 @@
       container: 'globe',
       style: {
         version: 8,
-        projection: { type: 'globe' },
         glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
         sources: {
           'satellite': {
@@ -120,14 +119,19 @@
       maxPitch: 85
     });
 
+    // Enable globe projection explicitly via API (more reliable than style-based)
+    map.on('style.load', function() {
+      map.setProjection({ type: 'globe' });
+    });
+
     map.on('load', function() {
-      // GeoJSON source with built-in clustering
+      // GeoJSON source — smaller cluster radius so markers stay visible
       map.addSource('stories', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: [] },
         cluster: true,
-        clusterMaxZoom: 12,
-        clusterRadius: 45
+        clusterMaxZoom: 10,
+        clusterRadius: 30
       });
 
       // Glow ring behind individual markers
@@ -170,6 +174,26 @@
         }
       });
 
+      // Cluster outer ring (glow)
+      map.addLayer({
+        id: 'cluster-glow',
+        type: 'circle',
+        source: 'stories',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': '#ef5350',
+          'circle-radius': [
+            'step', ['get', 'point_count'],
+            22,
+            5, 26,
+            10, 30,
+            25, 36
+          ],
+          'circle-opacity': 0.2,
+          'circle-stroke-width': 0
+        }
+      });
+
       // Cluster circles
       map.addLayer({
         id: 'clusters',
@@ -177,16 +201,22 @@
         source: 'stories',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': 'rgba(239, 83, 80, 0.85)',
+          'circle-color': [
+            'step', ['get', 'point_count'],
+            '#ef5350',
+            5, '#e53935',
+            10, '#c62828',
+            25, '#b71c1c'
+          ],
           'circle-radius': [
             'step', ['get', 'point_count'],
-            16,   // default
+            16,
             5, 20,
             10, 24,
             25, 28
           ],
-          'circle-stroke-width': 2,
-          'circle-stroke-color': 'rgba(255, 255, 255, 0.5)'
+          'circle-stroke-width': 2.5,
+          'circle-stroke-color': 'rgba(255, 255, 255, 0.7)'
         }
       });
 
@@ -198,11 +228,13 @@
         filter: ['has', 'point_count'],
         layout: {
           'text-field': '{point_count_abbreviated}',
-          'text-size': 12,
-          'text-font': ['Open Sans Bold']
+          'text-size': 13,
+          'text-font': ['Open Sans Semibold']
         },
         paint: {
-          'text-color': '#ffffff'
+          'text-color': '#ffffff',
+          'text-halo-color': 'rgba(0, 0, 0, 0.5)',
+          'text-halo-width': 1
         }
       });
 
