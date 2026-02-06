@@ -13,14 +13,52 @@
     touch-action: none;
   }
   #globe { width: 100%; height: 100%; }
-  .marker-label {
-    color: white;
-    font-size: 10px;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    pointer-events: none;
-    text-shadow: 0 0 4px rgba(0,0,0,0.8);
+
+  .marker {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s;
   }
+  .marker:active { transform: scale(1.5); }
+  .marker::after {
+    content: '';
+    position: absolute;
+    top: -4px; left: -4px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.3;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.5); opacity: 0.1; }
+  }
+
+  .marker.international { background: #ef5350; }
+  .marker.national { background: #ffa726; }
+  .marker.local { background: #66bb6a; }
+
+  .cluster-marker {
+    min-width: 28px; height: 28px;
+    border-radius: 14px;
+    background: rgba(239, 83, 80, 0.85);
+    border: 2px solid rgba(255,255,255,0.5);
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    font-family: -apple-system, Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0 6px;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .cluster-marker:active { transform: scale(1.2); }
 </style>
 </head>
 <body>
@@ -32,23 +70,14 @@
   let currentMarkers = [];
   let globe = null;
   let lastAltitude = 2.5;
-  let altitudeReportTimer = null;
 
-  function scopeColor(scope) {
-    switch(scope) {
-      case 'INTERNATIONAL': return '#ef5350';
-      case 'NATIONAL': return '#ffa726';
-      case 'LOCAL': return '#66bb6a';
-      default: return '#64b5f6';
-    }
-  }
-
-  function clusterMarkers(markers, threshold) {
-    if (threshold < 0.02) return markers.map(m => ({ ...m, count: 1, clustered: [m] }));
+  function clusterMarkers(markers, altitude) {
+    if (altitude < 0.05) return markers.map(m => ({ ...m, count: 1, clustered: [m] }));
 
     const used = new Set();
     const clusters = [];
-    const distThreshold = threshold * 15; // degrees based on altitude
+    // Tighter clustering: scale with altitude but capped
+    const distThreshold = Math.min(altitude * 8, 20);
 
     for (let i = 0; i < markers.length; i++) {
       if (used.has(i)) continue;
@@ -77,33 +106,39 @@
       .bumpImageUrl('https://unpkg.com/three-globe@2.35.0/example/img/earth-topology.png')
       .backgroundImageUrl('https://unpkg.com/three-globe@2.35.0/example/img/night-sky.png')
       .showAtmosphere(true)
-      .atmosphereColor('#1e88e5')
-      .atmosphereAltitude(0.15)
+      .atmosphereColor('#3a8fd6')
+      .atmosphereAltitude(0.2)
       .pointOfView({ lat: 20, lng: 0, altitude: 2.5 })
-      .pointLat('lat')
-      .pointLng('lng')
-      .pointAltitude(d => d.count > 1 ? 0.06 : 0.02)
-      .pointRadius(d => d.count > 1 ? Math.min(0.8, 0.3 + d.count * 0.05) : 0.15)
-      .pointColor(d => scopeColor(d.scope))
-      .pointLabel(d => {
+      .htmlElementsData([])
+      .htmlLat(d => d.lat)
+      .htmlLng(d => d.lng)
+      .htmlAltitude(0.01)
+      .htmlElement(d => {
+        const el = document.createElement('div');
         if (d.count > 1) {
-          return '<div class="marker-label">' + d.count + ' stories<br><b>' + escapeHtml(d.title) + '</b></div>';
-        }
-        return '<div class="marker-label"><b>' + escapeHtml(d.title) + '</b><br>' + escapeHtml(d.source) + '</div>';
-      })
-      .onPointClick(d => {
-        if (d.count > 1) {
-          // Zoom into cluster
-          globe.pointOfView({ lat: d.lat, lng: d.lng, altitude: lastAltitude * 0.4 }, 1000);
+          el.className = 'cluster-marker';
+          el.textContent = d.count;
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Send all story IDs in cluster to Android
+            const ids = d.clustered.map(s => s.id);
+            try { Android.onClusterTapped(JSON.stringify(ids)); } catch(ex) {}
+          });
         } else {
-          try { Android.onMarkerTapped(d.id); } catch(e) {}
+          el.className = 'marker ' + (d.scope || 'international').toLowerCase();
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            try { Android.onMarkerTapped(d.id); } catch(ex) {}
+          });
         }
+        return el;
       })
       .enablePointerInteraction(true)
       (document.getElementById('globe'));
 
     // Monitor altitude changes
     function checkAltitude() {
+      if (!globe) return;
       const pov = globe.pointOfView();
       if (pov && Math.abs(pov.altitude - lastAltitude) > 0.01) {
         lastAltitude = pov.altitude;
@@ -113,30 +148,22 @@
     }
     checkAltitude();
 
-    // Set initial control sensitivity
     const controls = globe.controls();
     if (controls) {
       controls.autoRotate = true;
-      controls.autoRotateSpeed = 0.3;
+      controls.autoRotateSpeed = 0.35;
       controls.enableDamping = true;
-      controls.dampingFactor = 0.1;
-      controls.rotateSpeed = 0.5;
-      controls.zoomSpeed = 1.0;
+      controls.dampingFactor = 0.12;
+      controls.rotateSpeed = 0.6;
+      controls.zoomSpeed = 1.2;
       controls.minDistance = 101;
       controls.maxDistance = 500;
     }
   }
 
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
   window.updateMarkers = function(jsonString) {
     try {
-      const markers = JSON.parse(jsonString);
-      currentMarkers = markers;
+      currentMarkers = JSON.parse(jsonString);
       renderMarkers();
     } catch(e) {
       console.error('Failed to parse markers:', e);
@@ -146,9 +173,8 @@
   function renderMarkers() {
     if (!globe) return;
     const clustered = clusterMarkers(currentMarkers, lastAltitude);
-    globe.pointsData(clustered);
+    globe.htmlElementsData(clustered);
 
-    // Stop auto-rotate when markers are loaded
     const controls = globe.controls();
     if (controls && currentMarkers.length > 0) {
       controls.autoRotate = false;
@@ -160,16 +186,15 @@
     globe.pointOfView({ lat: lat, lng: lng, altitude: altitude }, 1500);
   };
 
-  // Re-render markers when zoom changes significantly
+  // Re-cluster when zoom changes
   let lastClusterAltitude = 2.5;
   setInterval(function() {
-    if (Math.abs(lastAltitude - lastClusterAltitude) > 0.1) {
+    if (Math.abs(lastAltitude - lastClusterAltitude) > 0.05) {
       lastClusterAltitude = lastAltitude;
       renderMarkers();
     }
-  }, 300);
+  }, 400);
 
-  // Init
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initGlobe);
   } else {

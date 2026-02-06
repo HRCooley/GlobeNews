@@ -15,7 +15,9 @@ import kotlinx.coroutines.launch
 data class GlobeUiState(
     val allStories: List<NewsStory> = emptyList(),
     val visibleStories: List<NewsStory> = emptyList(),
-    val selectedStory: NewsStory? = null,
+    val sheetStories: List<NewsStory> = emptyList(),
+    val articleUrl: String? = null,
+    val articleTitle: String = "",
     val isLoading: Boolean = true,
     val zoomLevel: Double = 1.5,
     val searchQuery: String = "",
@@ -29,12 +31,10 @@ class GlobeViewModel(application: Application) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(GlobeUiState())
     val uiState: StateFlow<GlobeUiState> = _uiState.asStateFlow()
 
-    // Zoom thresholds for Globe.gl altitude
-    // Globe.gl altitude: ~2.5 = world view, ~0.5 = country, ~0.1 = city
     companion object {
-        const val ZOOM_INTERNATIONAL = 1.5  // zoomed out
-        const val ZOOM_NATIONAL = 0.6       // mid zoom
-        const val ZOOM_LOCAL = 0.2          // zoomed in
+        const val ZOOM_INTERNATIONAL = 1.5
+        const val ZOOM_NATIONAL = 0.6
+        const val ZOOM_LOCAL = 0.2
     }
 
     init {
@@ -63,18 +63,43 @@ class GlobeViewModel(application: Application) : AndroidViewModel(application) {
         val filtered = when {
             altitude > ZOOM_INTERNATIONAL -> stories.filter { it.scope == StoryScope.INTERNATIONAL }
             altitude > ZOOM_NATIONAL -> stories.filter { it.scope == StoryScope.INTERNATIONAL || it.scope == StoryScope.NATIONAL }
-            else -> stories // show all including local
+            else -> stories
         }
         _uiState.value = _uiState.value.copy(visibleStories = filtered)
     }
 
     fun onStorySelected(storyId: String) {
         val story = _uiState.value.allStories.find { it.id == storyId }
-        _uiState.value = _uiState.value.copy(selectedStory = story)
+        if (story != null) {
+            _uiState.value = _uiState.value.copy(sheetStories = listOf(story))
+        }
     }
 
-    fun dismissStory() {
-        _uiState.value = _uiState.value.copy(selectedStory = null)
+    fun onClusterTapped(storyIds: List<String>) {
+        val stories = storyIds.mapNotNull { id ->
+            _uiState.value.allStories.find { it.id == id }
+        }
+        if (stories.isNotEmpty()) {
+            _uiState.value = _uiState.value.copy(sheetStories = stories)
+        }
+    }
+
+    fun dismissSheet() {
+        _uiState.value = _uiState.value.copy(sheetStories = emptyList())
+    }
+
+    fun openArticle(story: NewsStory) {
+        if (story.url.isNotBlank()) {
+            _uiState.value = _uiState.value.copy(
+                articleUrl = story.url,
+                articleTitle = story.title,
+                sheetStories = emptyList()
+            )
+        }
+    }
+
+    fun closeArticle() {
+        _uiState.value = _uiState.value.copy(articleUrl = null, articleTitle = "")
     }
 
     fun onSearchQueryChanged(query: String) {

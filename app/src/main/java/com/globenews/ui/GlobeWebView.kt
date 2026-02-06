@@ -26,6 +26,7 @@ fun GlobeWebView(
     flyToAltitude: Double?,
     onZoomChanged: (Double) -> Unit,
     onStoryTapped: (String) -> Unit,
+    onClusterTapped: (List<String>) -> Unit,
     onFlyToConsumed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -58,6 +59,18 @@ fun GlobeWebView(
             @JavascriptInterface
             fun onMarkerTapped(storyId: String) {
                 onStoryTapped(storyId)
+            }
+
+            @JavascriptInterface
+            fun onClusterTapped(idsJson: String) {
+                try {
+                    val arr = JSONArray(idsJson)
+                    val ids = mutableListOf<String>()
+                    for (i in 0 until arr.length()) {
+                        ids.add(arr.getString(i))
+                    }
+                    onClusterTapped(ids)
+                } catch (_: Exception) {}
             }
         }
     }

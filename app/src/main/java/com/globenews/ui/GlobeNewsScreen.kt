@@ -48,6 +48,7 @@ fun GlobeNewsScreen(viewModel: GlobeViewModel) {
             flyToAltitude = uiState.flyToAltitude,
             onZoomChanged = { viewModel.onZoomChanged(it) },
             onStoryTapped = { viewModel.onStorySelected(it) },
+            onClusterTapped = { viewModel.onClusterTapped(it) },
             onFlyToConsumed = { viewModel.clearFlyTo() },
             modifier = Modifier.fillMaxSize()
         )
@@ -111,11 +112,22 @@ fun GlobeNewsScreen(viewModel: GlobeViewModel) {
             Icon(Icons.Default.Refresh, contentDescription = "Refresh")
         }
 
-        // Story card overlay
-        StoryCard(
-            story = uiState.selectedStory,
-            onDismiss = { viewModel.dismissStory() },
+        // Story list bottom sheet overlay
+        StoryListSheet(
+            stories = uiState.sheetStories,
+            onStoryClick = { viewModel.openArticle(it) },
+            onDismiss = { viewModel.dismissSheet() },
             modifier = Modifier.fillMaxSize()
         )
+
+        // In-app article browser
+        if (uiState.articleUrl != null) {
+            ArticleBrowser(
+                url = uiState.articleUrl!!,
+                title = uiState.articleTitle,
+                onDismiss = { viewModel.closeArticle() },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
     }
 }
