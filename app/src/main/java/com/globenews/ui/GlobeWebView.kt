@@ -1,6 +1,8 @@
 package com.globenews.ui
 
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
@@ -10,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -31,6 +34,14 @@ fun GlobeWebView(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+
+    // Keep updated references so the JS bridge always calls the latest lambdas
+    val currentOnZoomChanged = rememberUpdatedState(onZoomChanged)
+    val currentOnStoryTapped = rememberUpdatedState(onStoryTapped)
+    val currentOnClusterTapped = rememberUpdatedState(onClusterTapped)
+
+    val mainHandler = remember { Handler(Looper.getMainLooper()) }
+
     val webView = remember {
         WebView(context).apply {
             layoutParams = ViewGroup.LayoutParams(
@@ -52,13 +63,14 @@ fun GlobeWebView(
             @JavascriptInterface
             fun onZoomChanged(altitude: String) {
                 try {
-                    onZoomChanged(altitude.toDouble())
+                    val alt = altitude.toDouble()
+                    mainHandler.post { currentOnZoomChanged.value(alt) }
                 } catch (_: Exception) {}
             }
 
             @JavascriptInterface
             fun onMarkerTapped(storyId: String) {
-                onStoryTapped(storyId)
+                mainHandler.post { currentOnStoryTapped.value(storyId) }
             }
 
             @JavascriptInterface
@@ -69,7 +81,7 @@ fun GlobeWebView(
                     for (i in 0 until arr.length()) {
                         ids.add(arr.getString(i))
                     }
-                    onClusterTapped(ids)
+                    mainHandler.post { currentOnClusterTapped.value(ids) }
                 } catch (_: Exception) {}
             }
         }

@@ -19,9 +19,8 @@
     border-radius: 50%;
     cursor: pointer;
     position: relative;
-    transition: transform 0.2s;
+    pointer-events: auto;
   }
-  .marker:active { transform: scale(1.5); }
   .marker::after {
     content: '';
     position: absolute;
@@ -55,10 +54,9 @@
     justify-content: center;
     cursor: pointer;
     padding: 0 6px;
-    transition: transform 0.2s;
+    pointer-events: auto;
     box-shadow: 0 2px 8px rgba(0,0,0,0.4);
   }
-  .cluster-marker:active { transform: scale(1.2); }
 </style>
 </head>
 <body>
@@ -76,7 +74,6 @@
 
     const used = new Set();
     const clusters = [];
-    // Tighter clustering: scale with altitude but capped
     const distThreshold = Math.min(altitude * 8, 20);
 
     for (let i = 0; i < markers.length; i++) {
@@ -102,7 +99,7 @@
 
   function initGlobe() {
     globe = Globe()
-      .globeImageUrl('https://unpkg.com/three-globe@2.35.0/example/img/earth-blue-marble.jpg')
+      .globeImageUrl('https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x5400x2700.jpg')
       .bumpImageUrl('https://unpkg.com/three-globe@2.35.0/example/img/earth-topology.png')
       .backgroundImageUrl('https://unpkg.com/three-globe@2.35.0/example/img/night-sky.png')
       .showAtmosphere(true)
@@ -112,7 +109,8 @@
       .htmlElementsData([])
       .htmlLat(d => d.lat)
       .htmlLng(d => d.lng)
-      .htmlAltitude(0.01)
+      .htmlAltitude(0)
+      .htmlTransitionDuration(0)
       .htmlElement(d => {
         const el = document.createElement('div');
         if (d.count > 1) {
@@ -120,7 +118,12 @@
           el.textContent = d.count;
           el.addEventListener('click', (e) => {
             e.stopPropagation();
-            // Send all story IDs in cluster to Android
+            const ids = d.clustered.map(s => s.id);
+            try { Android.onClusterTapped(JSON.stringify(ids)); } catch(ex) {}
+          });
+          el.addEventListener('touchend', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
             const ids = d.clustered.map(s => s.id);
             try { Android.onClusterTapped(JSON.stringify(ids)); } catch(ex) {}
           });
@@ -130,10 +133,15 @@
             e.stopPropagation();
             try { Android.onMarkerTapped(d.id); } catch(ex) {}
           });
+          el.addEventListener('touchend', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            try { Android.onMarkerTapped(d.id); } catch(ex) {}
+          });
         }
         return el;
       })
-      .enablePointerInteraction(true)
+      .enablePointerInteraction(false)
       (document.getElementById('globe'));
 
     // Monitor altitude changes
