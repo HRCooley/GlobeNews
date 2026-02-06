@@ -15,10 +15,96 @@
   #globe { width: 100%; height: 100%; }
   .maplibregl-ctrl-attrib { display: none !important; }
   .maplibregl-ctrl-logo { display: none !important; }
+
+  /* Popup styling */
+  .maplibregl-popup-content {
+    background: rgba(15, 15, 30, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(100, 181, 246, 0.25);
+    border-radius: 12px;
+    padding: 12px 14px;
+    max-width: 260px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .maplibregl-popup-tip {
+    border-top-color: rgba(15, 15, 30, 0.92) !important;
+  }
+  .maplibregl-popup-close-button {
+    color: #888;
+    font-size: 18px;
+    padding: 4px 8px;
+  }
+  .popup-scope {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+  .popup-scope.int { background: rgba(239,83,80,0.25); color: #ef5350; }
+  .popup-scope.nat { background: rgba(255,167,38,0.25); color: #ffa726; }
+  .popup-scope.loc { background: rgba(102,187,106,0.25); color: #66bb6a; }
+  .popup-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .popup-source {
+    font-size: 11px;
+    color: #999;
+  }
+  .popup-tap {
+    font-size: 10px;
+    color: #64b5f6;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* Scope legend */
+  #legend {
+    position: fixed;
+    bottom: 90px;
+    left: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 10px;
+    color: rgba(255,255,255,0.7);
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  #legend.show { opacity: 1; }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    flex-shrink: 0;
+  }
 </style>
 </head>
 <body>
 <div id="globe"></div>
+<div id="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#ef5350"></div>Global</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ffa726"></div>National</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#66bb6a"></div>Local</div>
+</div>
 
 <script src="https://unpkg.com/maplibre-gl@5.17.0/dist/maplibre-gl.js"></script>
 <script>
@@ -26,54 +112,68 @@
   var map = null;
   var allMarkers = [];
   var mapReady = false;
+  var currentPopup = null;
 
-  // Zoom thresholds — MapLibre zoom levels
-  // zoom < 3:  globe/hemisphere view  -> INTERNATIONAL only
-  // zoom 3-5:  continent/region view  -> + NATIONAL
-  // zoom >= 5: country/city view      -> + LOCAL (everything)
-  var ZOOM_SHOW_NATIONAL = 3;
-  var ZOOM_SHOW_LOCAL = 5;
-
-  // Convert MapLibre zoom to Globe.gl-style altitude for ViewModel compatibility
   function altitudeFromZoom(zoom) {
     return 3.0 / Math.pow(2, zoom);
   }
 
-  // Convert Globe.gl-style altitude to MapLibre zoom
   function zoomFromAltitude(altitude) {
     return Math.log2(3.0 / Math.max(altitude, 0.01));
   }
 
-  // Filter markers by scope based on current zoom and push to map source
+  // Push ALL markers to the map source — let clustering handle density
   function applyMarkers() {
     if (!map || !mapReady || !map.getSource('stories')) return;
 
-    var zoom = map.getZoom();
-    var visible = [];
+    var features = [];
     for (var i = 0; i < allMarkers.length; i++) {
       var m = allMarkers[i];
-      if (m.scope === 'INTERNATIONAL') {
-        visible.push(m);
-      } else if (m.scope === 'NATIONAL' && zoom >= ZOOM_SHOW_NATIONAL) {
-        visible.push(m);
-      } else if (m.scope === 'LOCAL' && zoom >= ZOOM_SHOW_LOCAL) {
-        visible.push(m);
-      }
-    }
-
-    var features = [];
-    for (var j = 0; j < visible.length; j++) {
-      var v = visible[j];
       features.push({
         type: 'Feature',
-        geometry: { type: 'Point', coordinates: [v.lng, v.lat] },
-        properties: { id: v.id, title: v.title, source: v.source, scope: v.scope }
+        geometry: { type: 'Point', coordinates: [m.lng, m.lat] },
+        properties: { id: m.id, title: m.title, source: m.source, scope: m.scope }
       });
     }
 
     map.getSource('stories').setData({
       type: 'FeatureCollection',
       features: features
+    });
+  }
+
+  function scopeClass(scope) {
+    if (scope === 'INTERNATIONAL') return 'int';
+    if (scope === 'NATIONAL') return 'nat';
+    return 'loc';
+  }
+
+  function scopeLabel(scope) {
+    if (scope === 'INTERNATIONAL') return 'Global';
+    if (scope === 'NATIONAL') return 'National';
+    return 'Local';
+  }
+
+  function showPopup(coords, props) {
+    if (currentPopup) currentPopup.remove();
+
+    var html =
+      '<div class="popup-scope ' + scopeClass(props.scope) + '">' + scopeLabel(props.scope) + '</div>' +
+      '<div class="popup-title">' + props.title + '</div>' +
+      '<div class="popup-source">' + props.source + '</div>' +
+      '<div class="popup-tap">Tap to read &rarr;</div>';
+
+    currentPopup = new maplibregl.Popup({ offset: 14, closeButton: true, maxWidth: '260px' })
+      .setLngLat(coords)
+      .setHTML(html)
+      .addTo(map);
+
+    // Tapping the popup opens the article
+    currentPopup.getElement().addEventListener('click', function(e) {
+      if (e.target.classList.contains('maplibregl-popup-close-button')) return;
+      try { Android.onMarkerTapped(props.id); } catch(ex) {}
+      currentPopup.remove();
+      currentPopup = null;
     });
   }
 
@@ -100,12 +200,8 @@
         }],
         sky: {
           'atmosphere-blend': [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            0, 1,
-            5, 1,
-            7, 0
+            'interpolate', ['linear'], ['zoom'],
+            0, 1, 5, 1, 7, 0
           ]
         },
         light: {
@@ -119,82 +215,39 @@
       maxPitch: 85
     });
 
-    // Enable globe projection explicitly via API (more reliable than style-based)
+    // Globe projection — explicit API call is more reliable in WebView
     map.on('style.load', function() {
       map.setProjection({ type: 'globe' });
     });
 
     map.on('load', function() {
-      // GeoJSON source — smaller cluster radius so markers stay visible
+      // All markers in one source — clustering manages density naturally
       map.addSource('stories', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: [] },
         cluster: true,
-        clusterMaxZoom: 10,
-        clusterRadius: 30
+        clusterMaxZoom: 11,
+        clusterRadius: 40
       });
 
-      // Glow ring behind individual markers
-      map.addLayer({
-        id: 'unclustered-glow',
-        type: 'circle',
-        source: 'stories',
-        filter: ['!', ['has', 'point_count']],
-        paint: {
-          'circle-color': [
-            'match', ['get', 'scope'],
-            'INTERNATIONAL', '#ef5350',
-            'NATIONAL', '#ffa726',
-            'LOCAL', '#66bb6a',
-            '#ef5350'
-          ],
-          'circle-radius': 14,
-          'circle-opacity': 0.15,
-          'circle-stroke-width': 0
-        }
-      });
+      // ── Cluster layers ──
 
-      // Individual marker dots
-      map.addLayer({
-        id: 'unclustered-point',
-        type: 'circle',
-        source: 'stories',
-        filter: ['!', ['has', 'point_count']],
-        paint: {
-          'circle-color': [
-            'match', ['get', 'scope'],
-            'INTERNATIONAL', '#ef5350',
-            'NATIONAL', '#ffa726',
-            'LOCAL', '#66bb6a',
-            '#ef5350'
-          ],
-          'circle-radius': 7,
-          'circle-stroke-width': 2,
-          'circle-stroke-color': 'rgba(255, 255, 255, 0.6)'
-        }
-      });
-
-      // Cluster outer ring (glow)
+      // Cluster outer glow
       map.addLayer({
         id: 'cluster-glow',
         type: 'circle',
         source: 'stories',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': '#ef5350',
+          'circle-color': 'rgba(239, 83, 80, 0.12)',
           'circle-radius': [
             'step', ['get', 'point_count'],
-            22,
-            5, 26,
-            10, 30,
-            25, 36
-          ],
-          'circle-opacity': 0.2,
-          'circle-stroke-width': 0
+            28, 10, 34, 30, 42, 50, 50
+          ]
         }
       });
 
-      // Cluster circles
+      // Cluster circle
       map.addLayer({
         id: 'clusters',
         type: 'circle',
@@ -203,24 +256,21 @@
         paint: {
           'circle-color': [
             'step', ['get', 'point_count'],
-            '#ef5350',
-            5, '#e53935',
-            10, '#c62828',
-            25, '#b71c1c'
+            'rgba(239, 83, 80, 0.85)',
+            10, 'rgba(229, 57, 53, 0.9)',
+            30, 'rgba(198, 40, 40, 0.9)',
+            50, 'rgba(183, 28, 28, 0.95)'
           ],
           'circle-radius': [
             'step', ['get', 'point_count'],
-            16,
-            5, 20,
-            10, 24,
-            25, 28
+            18, 10, 22, 30, 28, 50, 34
           ],
-          'circle-stroke-width': 2.5,
-          'circle-stroke-color': 'rgba(255, 255, 255, 0.7)'
+          'circle-stroke-width': 2,
+          'circle-stroke-color': 'rgba(255, 255, 255, 0.5)'
         }
       });
 
-      // Cluster count labels
+      // Cluster count label
       map.addLayer({
         id: 'cluster-count',
         type: 'symbol',
@@ -229,67 +279,113 @@
         layout: {
           'text-field': '{point_count_abbreviated}',
           'text-size': 13,
-          'text-font': ['Open Sans Semibold']
+          'text-font': ['Open Sans Semibold'],
+          'text-allow-overlap': true
         },
         paint: {
           'text-color': '#ffffff',
-          'text-halo-color': 'rgba(0, 0, 0, 0.5)',
+          'text-halo-color': 'rgba(0,0,0,0.4)',
           'text-halo-width': 1
         }
       });
 
-      // Click on cluster -> get leaves and send IDs to Android
+      // ── Individual marker layers ──
+
+      // Outer glow ring
+      map.addLayer({
+        id: 'marker-glow',
+        type: 'circle',
+        source: 'stories',
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+          'circle-color': [
+            'match', ['get', 'scope'],
+            'INTERNATIONAL', '#ef5350',
+            'NATIONAL', '#ffa726',
+            'LOCAL', '#66bb6a',
+            '#ef5350'
+          ],
+          'circle-radius': 16,
+          'circle-opacity': 0.12,
+          'circle-stroke-width': 0
+        }
+      });
+
+      // Marker dot
+      map.addLayer({
+        id: 'marker-dot',
+        type: 'circle',
+        source: 'stories',
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+          'circle-color': [
+            'match', ['get', 'scope'],
+            'INTERNATIONAL', '#ef5350',
+            'NATIONAL', '#ffa726',
+            'LOCAL', '#66bb6a',
+            '#ef5350'
+          ],
+          'circle-radius': [
+            'interpolate', ['linear'], ['zoom'],
+            0, 5,
+            4, 7,
+            8, 9
+          ],
+          'circle-stroke-width': 2,
+          'circle-stroke-color': 'rgba(255, 255, 255, 0.7)'
+        }
+      });
+
+      // ── Interactions ──
+
+      // Cluster tap → zoom in to expand (standard map UX)
       map.on('click', 'clusters', function(e) {
         var features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
         if (!features.length) return;
         var clusterId = features[0].properties.cluster_id;
         var source = map.getSource('stories');
-        source.getClusterLeaves(clusterId, 100, 0, function(err, leaves) {
-          if (err || !leaves) return;
-          var ids = leaves.map(function(f) { return f.properties.id; });
-          try { Android.onClusterTapped(JSON.stringify(ids)); } catch(ex) {}
+
+        source.getClusterExpansionZoom(clusterId, function(err, zoom) {
+          if (err) return;
+          map.easeTo({
+            center: features[0].geometry.coordinates,
+            zoom: Math.min(zoom, 12),
+            duration: 500
+          });
         });
       });
 
-      // Click on individual marker
-      map.on('click', 'unclustered-point', function(e) {
+      // Individual marker tap → show popup with headline
+      map.on('click', 'marker-dot', function(e) {
         if (!e.features || !e.features.length) return;
-        var id = e.features[0].properties.id;
-        try { Android.onMarkerTapped(id); } catch(ex) {}
+        var f = e.features[0];
+        showPopup(f.geometry.coordinates.slice(), f.properties);
+      });
+      map.on('click', 'marker-glow', function(e) {
+        if (!e.features || !e.features.length) return;
+        var f = e.features[0];
+        showPopup(f.geometry.coordinates.slice(), f.properties);
       });
 
-      // Also handle taps on the glow ring
-      map.on('click', 'unclustered-glow', function(e) {
-        if (!e.features || !e.features.length) return;
-        var id = e.features[0].properties.id;
-        try { Android.onMarkerTapped(id); } catch(ex) {}
-      });
+      // Cursor hints
+      map.on('mouseenter', 'clusters', function() { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', 'clusters', function() { map.getCanvas().style.cursor = ''; });
+      map.on('mouseenter', 'marker-dot', function() { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', 'marker-dot', function() { map.getCanvas().style.cursor = ''; });
 
       mapReady = true;
 
-      // Apply any markers that were received before the map was ready
       if (allMarkers.length > 0) {
         applyMarkers();
       }
 
-      // Notify Android that globe is ready
+      // Show legend
+      document.getElementById('legend').classList.add('show');
+
       try { Android.onGlobeReady(); } catch(e) {}
     });
 
-    // Re-filter markers when zoom changes so the right scopes are visible
-    var lastFilterZoom = 1.5;
-    map.on('zoomend', function() {
-      var zoom = map.getZoom();
-      // Only re-filter if we crossed a scope threshold
-      var crossedNational = (lastFilterZoom < ZOOM_SHOW_NATIONAL) !== (zoom < ZOOM_SHOW_NATIONAL);
-      var crossedLocal = (lastFilterZoom < ZOOM_SHOW_LOCAL) !== (zoom < ZOOM_SHOW_LOCAL);
-      if (crossedNational || crossedLocal) {
-        applyMarkers();
-      }
-      lastFilterZoom = zoom;
-    });
-
-    // Report altitude to Android for ViewModel
+    // Report altitude to Android
     var lastReportedAlt = altitudeFromZoom(1.5);
     map.on('moveend', function() {
       var alt = altitudeFromZoom(map.getZoom());
@@ -305,12 +401,13 @@
       allMarkers = JSON.parse(jsonString);
       applyMarkers();
     } catch(e) {
-      console.error('Failed to update markers:', e);
+      console.error('updateMarkers error:', e);
     }
   };
 
   window.flyTo = function(lat, lng, altitude) {
     if (!map) return;
+    if (currentPopup) { currentPopup.remove(); currentPopup = null; }
     var zoom = zoomFromAltitude(altitude);
     map.flyTo({ center: [lng, lat], zoom: zoom, duration: 1500 });
   };
