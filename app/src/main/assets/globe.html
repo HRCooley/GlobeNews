@@ -24,7 +24,15 @@
 <script>
 (function() {
   let map = null;
-  let currentMarkers = [];
+  let allMarkers = [];
+  let mapReady = false;
+
+  // Zoom thresholds — MapLibre zoom levels
+  // zoom < 3:  globe/hemisphere view  → INTERNATIONAL only
+  // zoom 3-5:  continent/region view  → + NATIONAL
+  // zoom >= 5: country/city view      → + LOCAL (everything)
+  var ZOOM_SHOW_NATIONAL = 3;
+  var ZOOM_SHOW_LOCAL = 5;
 
   // Convert MapLibre zoom to Globe.gl-style altitude for ViewModel compatibility
   function altitudeFromZoom(zoom) {
@@ -34,6 +42,39 @@
   // Convert Globe.gl-style altitude to MapLibre zoom
   function zoomFromAltitude(altitude) {
     return Math.log2(3.0 / Math.max(altitude, 0.01));
+  }
+
+  // Filter markers by scope based on current zoom and push to map source
+  function applyMarkers() {
+    if (!map || !mapReady || !map.getSource('stories')) return;
+
+    var zoom = map.getZoom();
+    var visible = [];
+    for (var i = 0; i < allMarkers.length; i++) {
+      var m = allMarkers[i];
+      if (m.scope === 'INTERNATIONAL') {
+        visible.push(m);
+      } else if (m.scope === 'NATIONAL' && zoom >= ZOOM_SHOW_NATIONAL) {
+        visible.push(m);
+      } else if (m.scope === 'LOCAL' && zoom >= ZOOM_SHOW_LOCAL) {
+        visible.push(m);
+      }
+    }
+
+    var features = [];
+    for (var j = 0; j < visible.length; j++) {
+      var v = visible[j];
+      features.push({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [v.lng, v.lat] },
+        properties: { id: v.id, title: v.title, source: v.source, scope: v.scope }
+      });
+    }
+
+    map.getSource('stories').setData({
+      type: 'FeatureCollection',
+      features: features
+    });
   }
 
   function initMap() {
@@ -167,13 +208,13 @@
 
       // Click on cluster -> get leaves and send IDs to Android
       map.on('click', 'clusters', function(e) {
-        const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+        var features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
         if (!features.length) return;
-        const clusterId = features[0].properties.cluster_id;
-        const source = map.getSource('stories');
+        var clusterId = features[0].properties.cluster_id;
+        var source = map.getSource('stories');
         source.getClusterLeaves(clusterId, 100, 0, function(err, leaves) {
           if (err || !leaves) return;
-          const ids = leaves.map(function(f) { return f.properties.id; });
+          var ids = leaves.map(function(f) { return f.properties.id; });
           try { Android.onClusterTapped(JSON.stringify(ids)); } catch(ex) {}
         });
       });
@@ -181,42 +222,45 @@
       // Click on individual marker
       map.on('click', 'unclustered-point', function(e) {
         if (!e.features || !e.features.length) return;
-        const id = e.features[0].properties.id;
+        var id = e.features[0].properties.id;
         try { Android.onMarkerTapped(id); } catch(ex) {}
       });
 
       // Also handle taps on the glow ring
       map.on('click', 'unclustered-glow', function(e) {
         if (!e.features || !e.features.length) return;
-        const id = e.features[0].properties.id;
+        var id = e.features[0].properties.id;
         try { Android.onMarkerTapped(id); } catch(ex) {}
       });
 
-      // Apply any markers that arrived before the map was ready
-      if (currentMarkers.length > 0) {
-        var features = [];
-        for (var i = 0; i < currentMarkers.length; i++) {
-          var m = currentMarkers[i];
-          features.push({
-            type: 'Feature',
-            geometry: { type: 'Point', coordinates: [m.lng, m.lat] },
-            properties: { id: m.id, title: m.title, source: m.source, scope: m.scope }
-          });
-        }
-        map.getSource('stories').setData({
-          type: 'FeatureCollection',
-          features: features
-        });
+      mapReady = true;
+
+      // Apply any markers that were received before the map was ready
+      if (allMarkers.length > 0) {
+        applyMarkers();
       }
 
       // Notify Android that globe is ready
       try { Android.onGlobeReady(); } catch(e) {}
     });
 
-    // Track zoom changes — use 'moveend' only (fires after zoom too)
-    let lastReportedAlt = altitudeFromZoom(1.5);
+    // Re-filter markers when zoom changes so the right scopes are visible
+    var lastFilterZoom = 1.5;
+    map.on('zoomend', function() {
+      var zoom = map.getZoom();
+      // Only re-filter if we crossed a scope threshold
+      var crossedNational = (lastFilterZoom < ZOOM_SHOW_NATIONAL) !== (zoom < ZOOM_SHOW_NATIONAL);
+      var crossedLocal = (lastFilterZoom < ZOOM_SHOW_LOCAL) !== (zoom < ZOOM_SHOW_LOCAL);
+      if (crossedNational || crossedLocal) {
+        applyMarkers();
+      }
+      lastFilterZoom = zoom;
+    });
+
+    // Report altitude to Android for ViewModel
+    var lastReportedAlt = altitudeFromZoom(1.5);
     map.on('moveend', function() {
-      const alt = altitudeFromZoom(map.getZoom());
+      var alt = altitudeFromZoom(map.getZoom());
       if (Math.abs(alt - lastReportedAlt) > 0.05) {
         lastReportedAlt = alt;
         try { Android.onZoomChanged(String(alt)); } catch(e) {}
@@ -226,23 +270,8 @@
 
   window.updateMarkers = function(jsonString) {
     try {
-      currentMarkers = JSON.parse(jsonString);
-      if (!map || !map.getSource('stories')) return;
-
-      var features = [];
-      for (var i = 0; i < currentMarkers.length; i++) {
-        var m = currentMarkers[i];
-        features.push({
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [m.lng, m.lat] },
-          properties: { id: m.id, title: m.title, source: m.source, scope: m.scope }
-        });
-      }
-
-      map.getSource('stories').setData({
-        type: 'FeatureCollection',
-        features: features
-      });
+      allMarkers = JSON.parse(jsonString);
+      applyMarkers();
     } catch(e) {
       console.error('Failed to update markers:', e);
     }
