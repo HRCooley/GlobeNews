@@ -11,12 +11,15 @@
   /* ── Markers ── */
   .marker {
     position: relative;
-    width: 32px; height: 32px;
+    width: 36px; height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transform: translate(-50%, -50%);
+    pointer-events: auto !important;
+    margin-left: -18px;
+    margin-top: -18px;
+    -webkit-tap-highlight-color: transparent;
   }
   .marker-dot {
     width: 12px; height: 12px;
@@ -224,6 +227,7 @@
   function createMarkerEl(d) {
     var el = document.createElement('div');
     el.className = 'marker';
+    el.style.pointerEvents = 'auto';
     var sc = scopeClass(d.scope);
 
     var dot = document.createElement('div');
@@ -232,10 +236,25 @@
 
     var ping = document.createElement('div');
     ping.className = 'marker-ping ' + sc;
-    // Stagger animation delay
     ping.style.animationDelay = (Math.random() * 3).toFixed(1) + 's';
     el.appendChild(ping);
 
+    // Use touchend for reliable taps on Android WebView
+    var touchMoved = false;
+    el.addEventListener('touchstart', function(e) {
+      touchMoved = false;
+    }, { passive: true });
+    el.addEventListener('touchmove', function() {
+      touchMoved = true;
+    }, { passive: true });
+    el.addEventListener('touchend', function(e) {
+      if (!touchMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+        showStoryCard(d);
+      }
+    });
+    // Fallback for non-touch
     el.addEventListener('click', function(e) {
       e.stopPropagation();
       showStoryCard(d);
