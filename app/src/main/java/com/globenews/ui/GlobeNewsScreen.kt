@@ -19,18 +19,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,11 +46,22 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.globenews.viewmodel.GlobeViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun GlobeNewsScreen(viewModel: GlobeViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
+
+    // Auto-dismiss "not found" snackbar
+    var showNotFound by remember { mutableStateOf(false) }
+    LaunchedEffect(uiState.searchNotFound) {
+        if (uiState.searchNotFound) {
+            showNotFound = true
+            delay(2500)
+            showNotFound = false
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF0a0a1a))) {
         // Globe WebView - fullscreen
@@ -80,6 +97,16 @@ fun GlobeNewsScreen(viewModel: GlobeViewModel) {
                         Icon(Icons.Default.Search, contentDescription = "Search", tint = Color(0xFF888888))
                     }
                 },
+                trailingIcon = {
+                    if (uiState.searchQuery.isNotEmpty()) {
+                        IconButton(onClick = {
+                            viewModel.clearSearch()
+                            focusManager.clearFocus()
+                        }) {
+                            Icon(Icons.Default.Clear, contentDescription = "Clear", tint = Color(0xFF888888))
+                        }
+                    }
+                },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = {
@@ -100,6 +127,24 @@ fun GlobeNewsScreen(viewModel: GlobeViewModel) {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 40.dp)
             )
+        }
+
+        // "Location not found" snackbar
+        AnimatedVisibility(
+            visible = showNotFound,
+            enter = fadeIn(animationSpec = tween(200)),
+            exit = fadeOut(animationSpec = tween(300)),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 100.dp, start = 16.dp, end = 16.dp)
+        ) {
+            Snackbar(
+                containerColor = Color(0xFF2a1a1a),
+                contentColor = Color(0xFFff8a80),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text("Location not found. Try a city, country, or region name.")
+            }
         }
 
         // Refresh FAB (only visible after globe loads)

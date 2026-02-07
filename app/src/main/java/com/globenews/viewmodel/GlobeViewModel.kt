@@ -19,6 +19,7 @@ data class GlobeUiState(
     val isLoading: Boolean = true,
     val globeReady: Boolean = false,
     val searchQuery: String = "",
+    val searchNotFound: Boolean = false,
     val flyToLat: Double? = null,
     val flyToLng: Double? = null,
     val flyToAltitude: Double? = null
@@ -83,18 +84,27 @@ class GlobeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onSearchQueryChanged(query: String) {
-        _uiState.value = _uiState.value.copy(searchQuery = query)
+        _uiState.value = _uiState.value.copy(searchQuery = query, searchNotFound = false)
     }
 
     fun onSearch() {
-        val location = GeocodingHelper.search(_uiState.value.searchQuery)
+        val query = _uiState.value.searchQuery.trim()
+        if (query.isEmpty()) return
+        val location = GeocodingHelper.search(query)
         if (location != null) {
             _uiState.value = _uiState.value.copy(
                 flyToLat = location.lat,
                 flyToLng = location.lng,
-                flyToAltitude = 0.4
+                flyToAltitude = 0.4,
+                searchNotFound = false
             )
+        } else {
+            _uiState.value = _uiState.value.copy(searchNotFound = true)
         }
+    }
+
+    fun clearSearch() {
+        _uiState.value = _uiState.value.copy(searchQuery = "", searchNotFound = false)
     }
 
     fun clearFlyTo() {

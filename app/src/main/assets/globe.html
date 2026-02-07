@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #000; overflow: hidden; width: 100vw; height: 100vh; }
+  body { background: #000; overflow: hidden; width: 100vw; height: 100vh; touch-action: none; }
   #globeContainer { width: 100%; height: 100%; }
 
   /* Story card - slides up from bottom */
@@ -15,20 +15,23 @@
     background: rgba(15, 15, 30, 0.95);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border-top: 1px solid rgba(100, 181, 246, 0.2);
+    border-top: 1px solid rgba(100, 181, 246, 0.25);
     border-radius: 20px 20px 0 0;
-    padding: 20px 20px 28px;
+    padding: 12px 20px 28px;
     transform: translateY(100%);
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 100;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: #fff;
     cursor: pointer;
+    will-change: transform;
+    max-height: 55vh;
+    overflow-y: auto;
   }
   #storyCard.visible { transform: translateY(0); }
   #storyCard .handle {
     width: 36px; height: 4px;
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.25);
     border-radius: 2px;
     margin: 0 auto 14px;
   }
@@ -39,11 +42,23 @@
     text-transform: uppercase;
     padding: 3px 10px;
     border-radius: 4px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   #storyCard .scope-badge.int { background: rgba(255,82,82,0.2); color: #ff5252; }
   #storyCard .scope-badge.nat { background: rgba(255,171,64,0.2); color: #ffab40; }
   #storyCard .scope-badge.loc { background: rgba(105,240,174,0.2); color: #69f0ae; }
+  #storyCard .location {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  #storyCard .location::before {
+    content: '\1F4CD';
+    font-size: 10px;
+  }
   #storyCard .title {
     font-size: 17px; font-weight: 600;
     line-height: 1.35;
@@ -51,33 +66,49 @@
   }
   #storyCard .source {
     font-size: 12px; color: #999;
+    margin-bottom: 8px;
+  }
+  #storyCard .summary {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.6);
     margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   #storyCard .read-btn {
     display: inline-block;
-    font-size: 12px; font-weight: 600;
+    font-size: 13px; font-weight: 600;
     color: #64b5f6;
     letter-spacing: 0.5px;
+    padding: 8px 16px;
+    background: rgba(100, 181, 246, 0.1);
+    border-radius: 8px;
+    transition: background 0.2s;
   }
   #storyCard .close-btn {
     position: absolute;
-    top: 16px; right: 16px;
-    width: 28px; height: 28px;
+    top: 12px; right: 14px;
+    width: 30px; height: 30px;
     border-radius: 50%;
     background: rgba(255,255,255,0.08);
     border: none;
     color: #888;
-    font-size: 16px;
+    font-size: 18px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.2s;
   }
+  #storyCard .close-btn:active { background: rgba(255,255,255,0.15); }
 
   /* Legend */
   #legend {
     position: fixed;
-    bottom: 88px; left: 14px;
+    bottom: 20px; left: 14px;
     display: flex; flex-direction: column; gap: 5px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 10px;
@@ -88,6 +119,7 @@
     transition: opacity 1s ease 0.5s;
   }
   #legend.show { opacity: 1; }
+  #legend.card-open { bottom: 88px; transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
   .legend-item { display: flex; align-items: center; gap: 6px; }
   .legend-dot {
     width: 8px; height: 8px;
@@ -109,6 +141,20 @@
     transition: opacity 1s ease 0.8s;
   }
   #storyCount.show { opacity: 1; }
+
+  /* Loading overlay for globe textures */
+  #globeLoader {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    z-index: 50;
+    transition: opacity 0.5s;
+  }
+  #globeLoader.hide { opacity: 0; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -118,8 +164,10 @@
   <div class="handle"></div>
   <button class="close-btn" id="cardClose">&times;</button>
   <div class="scope-badge" id="cardScope"></div>
+  <div class="location" id="cardLocation"></div>
   <div class="title" id="cardTitle"></div>
   <div class="source" id="cardSource"></div>
+  <div class="summary" id="cardSummary"></div>
   <div class="read-btn">Read article &rarr;</div>
 </div>
 
@@ -130,6 +178,7 @@
 </div>
 
 <div id="storyCount"></div>
+<div id="globeLoader">Loading globe textures...</div>
 
 <script src="https://unpkg.com/globe.gl@2.33.0"></script>
 <script>
@@ -137,8 +186,13 @@
   var globe = null;
   var allMarkers = [];
   var selectedStory = null;
+  var highlightedId = null;
   var cardEl = document.getElementById('storyCard');
+  var legendEl = document.getElementById('legend');
+  var loaderEl = document.getElementById('globeLoader');
   var idleTimer = null;
+  var pulsePhase = 0;
+  var animFrame = null;
 
   function scopeColor(scope) {
     if (scope === 'INTERNATIONAL') return '#ff5252';
@@ -158,22 +212,87 @@
     return 'Local';
   }
 
+  // ── Story Card ──
+
   function showStoryCard(story) {
     selectedStory = story;
+    highlightedId = story.id;
+
     var badge = document.getElementById('cardScope');
     badge.textContent = scopeLabel(story.scope);
     badge.className = 'scope-badge ' + scopeClass(story.scope);
+
+    var locEl = document.getElementById('cardLocation');
+    if (story.location) {
+      locEl.textContent = story.location;
+      locEl.style.display = 'flex';
+    } else {
+      locEl.style.display = 'none';
+    }
+
     document.getElementById('cardTitle').textContent = story.title;
     document.getElementById('cardSource').textContent = story.source;
+
+    var summaryEl = document.getElementById('cardSummary');
+    if (story.summary && story.summary.length > 0) {
+      summaryEl.textContent = story.summary;
+      summaryEl.style.display = '-webkit-box';
+    } else {
+      summaryEl.style.display = 'none';
+    }
+
     cardEl.classList.add('visible');
+    legendEl.classList.add('card-open');
+
+    // Refresh marker visuals for highlight ring
+    if (globe) globe.pointsData(allMarkers);
+
+    // Fly to the story location
+    globe.pointOfView({ lat: story.lat, lng: story.lng, altitude: 1.8 }, 1200);
   }
 
   function hideStoryCard() {
     cardEl.classList.remove('visible');
+    legendEl.classList.remove('card-open');
     selectedStory = null;
+    highlightedId = null;
+    if (globe) globe.pointsData(allMarkers);
   }
 
-  // Card interaction
+  // ── Swipe-to-dismiss ──
+
+  var swipeStartY = 0;
+  var swipeDelta = 0;
+  var isSwiping = false;
+
+  cardEl.addEventListener('touchstart', function(e) {
+    if (e.target.id === 'cardClose') return;
+    swipeStartY = e.touches[0].clientY;
+    swipeDelta = 0;
+    isSwiping = true;
+    cardEl.style.transition = 'none';
+  }, { passive: true });
+
+  cardEl.addEventListener('touchmove', function(e) {
+    if (!isSwiping) return;
+    swipeDelta = e.touches[0].clientY - swipeStartY;
+    if (swipeDelta > 0) {
+      cardEl.style.transform = 'translateY(' + swipeDelta + 'px)';
+    }
+  }, { passive: true });
+
+  cardEl.addEventListener('touchend', function() {
+    if (!isSwiping) return;
+    isSwiping = false;
+    cardEl.style.transition = 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)';
+    if (swipeDelta > 80) {
+      hideStoryCard();
+    } else {
+      cardEl.style.transform = cardEl.classList.contains('visible') ? 'translateY(0)' : 'translateY(100%)';
+    }
+  }, { passive: true });
+
+  // Card click interaction
   cardEl.addEventListener('click', function(e) {
     if (e.target.id === 'cardClose') {
       hideStoryCard();
@@ -184,6 +303,30 @@
       hideStoryCard();
     }
   });
+
+  // ── Pulse Animation ──
+
+  function startPulse() {
+    function animate() {
+      pulsePhase += 0.025;
+      if (pulsePhase > Math.PI * 2) pulsePhase -= Math.PI * 2;
+      animFrame = requestAnimationFrame(animate);
+    }
+    animate();
+  }
+
+  function getPulseAltitude(d) {
+    if (d.id === highlightedId) return 0.025;
+    var offset = (d._idx || 0) * 0.3;
+    return 0.004 + 0.003 * Math.sin(pulsePhase + offset);
+  }
+
+  function getPulseRadius(d) {
+    if (d.id === highlightedId) return 0.6;
+    return 0.35;
+  }
+
+  // ── Globe Init ──
 
   function initGlobe() {
     var container = document.getElementById('globeContainer');
@@ -200,9 +343,12 @@
       .pointsData([])
       .pointLat('lat')
       .pointLng('lng')
-      .pointColor(function(d) { return scopeColor(d.scope); })
-      .pointAltitude(0.006)
-      .pointRadius(0.35)
+      .pointColor(function(d) {
+        if (d.id === highlightedId) return '#ffffff';
+        return scopeColor(d.scope);
+      })
+      .pointAltitude(getPulseAltitude)
+      .pointRadius(getPulseRadius)
       .pointResolution(12)
       .onPointClick(function(point) {
         showStoryCard(point);
@@ -237,6 +383,10 @@
     controls.addEventListener('start', function() {
       controls.autoRotate = false;
       if (idleTimer) clearTimeout(idleTimer);
+      // Dismiss story card on globe interaction (unless touching the card)
+      if (selectedStory) {
+        hideStoryCard();
+      }
     });
     controls.addEventListener('end', function() {
       if (idleTimer) clearTimeout(idleTimer);
@@ -250,8 +400,17 @@
       globe.width(window.innerWidth).height(window.innerHeight);
     });
 
+    // Hide loader once globe image loads
+    var globeObj = globe.scene().children.find(function(c) { return c.type === 'Group'; });
+    setTimeout(function() {
+      loaderEl.classList.add('hide');
+    }, 3000);
+
     // Show legend
-    document.getElementById('legend').classList.add('show');
+    legendEl.classList.add('show');
+
+    // Start pulse animation
+    startPulse();
 
     // Notify Android
     try { Android.onGlobeReady(); } catch(e) {}
@@ -262,6 +421,10 @@
   window.updateMarkers = function(jsonString) {
     try {
       allMarkers = JSON.parse(jsonString);
+      // Assign an index for staggered pulse
+      for (var i = 0; i < allMarkers.length; i++) {
+        allMarkers[i]._idx = i;
+      }
       if (globe) {
         globe.pointsData(allMarkers);
         // Update count

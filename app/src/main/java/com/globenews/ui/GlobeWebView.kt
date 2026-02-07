@@ -124,6 +124,7 @@ fun GlobeWebView(
                 obj.put("id", story.id)
                 obj.put("title", story.title)
                 obj.put("source", story.source)
+                obj.put("summary", story.summary)
                 obj.put("lat", story.latitude)
                 obj.put("lng", story.longitude)
                 obj.put("scope", story.scope.name)
