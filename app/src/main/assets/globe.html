@@ -3,143 +3,147 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.17.0/dist/maplibre-gl.css">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #0a0a1a;
-    overflow: hidden;
-    width: 100vw;
-    height: 100vh;
-  }
-  #globe { width: 100%; height: 100%; }
-  .maplibregl-ctrl-attrib { display: none !important; }
-  .maplibregl-ctrl-logo { display: none !important; }
+  body { background: #000; overflow: hidden; width: 100vw; height: 100vh; }
+  #globeContainer { width: 100%; height: 100%; }
 
-  /* Popup styling */
-  .maplibregl-popup-content {
-    background: rgba(15, 15, 30, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(100, 181, 246, 0.25);
-    border-radius: 12px;
-    padding: 12px 14px;
-    max-width: 260px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-    color: #fff;
+  /* Story card - slides up from bottom */
+  #storyCard {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(15, 15, 30, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(100, 181, 246, 0.2);
+    border-radius: 20px 20px 0 0;
+    padding: 20px 20px 28px;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #fff;
+    cursor: pointer;
   }
-  .maplibregl-popup-tip {
-    border-top-color: rgba(15, 15, 30, 0.92) !important;
+  #storyCard.visible { transform: translateY(0); }
+  #storyCard .handle {
+    width: 36px; height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    margin: 0 auto 14px;
   }
-  .maplibregl-popup-close-button {
-    color: #888;
-    font-size: 18px;
-    padding: 4px 8px;
-  }
-  .popup-scope {
+  #storyCard .scope-badge {
     display: inline-block;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1px;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
-    padding: 2px 8px;
+    padding: 3px 10px;
     border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  #storyCard .scope-badge.int { background: rgba(255,82,82,0.2); color: #ff5252; }
+  #storyCard .scope-badge.nat { background: rgba(255,171,64,0.2); color: #ffab40; }
+  #storyCard .scope-badge.loc { background: rgba(105,240,174,0.2); color: #69f0ae; }
+  #storyCard .title {
+    font-size: 17px; font-weight: 600;
+    line-height: 1.35;
     margin-bottom: 6px;
   }
-  .popup-scope.int { background: rgba(239,83,80,0.25); color: #ef5350; }
-  .popup-scope.nat { background: rgba(255,167,38,0.25); color: #ffa726; }
-  .popup-scope.loc { background: rgba(102,187,106,0.25); color: #66bb6a; }
-  .popup-title {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.3;
-    margin-bottom: 4px;
+  #storyCard .source {
+    font-size: 12px; color: #999;
+    margin-bottom: 12px;
   }
-  .popup-source {
-    font-size: 11px;
-    color: #999;
-  }
-  .popup-tap {
-    font-size: 10px;
+  #storyCard .read-btn {
+    display: inline-block;
+    font-size: 12px; font-weight: 600;
     color: #64b5f6;
-    margin-top: 8px;
-    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  #storyCard .close-btn {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: #888;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* Scope legend */
+  /* Legend */
   #legend {
     position: fixed;
-    bottom: 90px;
-    left: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    bottom: 88px; left: 14px;
+    display: flex; flex-direction: column; gap: 5px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 10px;
-    color: rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.6);
     pointer-events: none;
     z-index: 10;
     opacity: 0;
-    transition: opacity 0.8s ease;
+    transition: opacity 1s ease 0.5s;
   }
   #legend.show { opacity: 1; }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
   .legend-dot {
-    width: 10px;
-    height: 10px;
+    width: 8px; height: 8px;
     border-radius: 50%;
-    border: 1.5px solid rgba(255,255,255,0.5);
+    border: 1.5px solid rgba(255,255,255,0.4);
     flex-shrink: 0;
   }
+
+  /* Story count badge */
+  #storyCount {
+    position: fixed;
+    top: 96px; right: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1s ease 0.8s;
+  }
+  #storyCount.show { opacity: 1; }
 </style>
 </head>
 <body>
-<div id="globe"></div>
-<div id="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:#ef5350"></div>Global</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#ffa726"></div>National</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#66bb6a"></div>Local</div>
+<div id="globeContainer"></div>
+
+<div id="storyCard">
+  <div class="handle"></div>
+  <button class="close-btn" id="cardClose">&times;</button>
+  <div class="scope-badge" id="cardScope"></div>
+  <div class="title" id="cardTitle"></div>
+  <div class="source" id="cardSource"></div>
+  <div class="read-btn">Read article &rarr;</div>
 </div>
 
-<script src="https://unpkg.com/maplibre-gl@5.17.0/dist/maplibre-gl.js"></script>
+<div id="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#ff5252"></div>Global</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ffab40"></div>National</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#69f0ae"></div>Local</div>
+</div>
+
+<div id="storyCount"></div>
+
+<script src="https://unpkg.com/globe.gl@2.33.0"></script>
 <script>
 (function() {
-  var map = null;
+  var globe = null;
   var allMarkers = [];
-  var mapReady = false;
-  var currentPopup = null;
+  var selectedStory = null;
+  var cardEl = document.getElementById('storyCard');
+  var idleTimer = null;
 
-  function altitudeFromZoom(zoom) {
-    return 3.0 / Math.pow(2, zoom);
-  }
-
-  function zoomFromAltitude(altitude) {
-    return Math.log2(3.0 / Math.max(altitude, 0.01));
-  }
-
-  // Push ALL markers to the map source — let clustering handle density
-  function applyMarkers() {
-    if (!map || !mapReady || !map.getSource('stories')) return;
-
-    var features = [];
-    for (var i = 0; i < allMarkers.length; i++) {
-      var m = allMarkers[i];
-      features.push({
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [m.lng, m.lat] },
-        properties: { id: m.id, title: m.title, source: m.source, scope: m.scope }
-      });
-    }
-
-    map.getSource('stories').setData({
-      type: 'FeatureCollection',
-      features: features
-    });
+  function scopeColor(scope) {
+    if (scope === 'INTERNATIONAL') return '#ff5252';
+    if (scope === 'NATIONAL') return '#ffab40';
+    return '#69f0ae';
   }
 
   function scopeClass(scope) {
@@ -154,265 +158,130 @@
     return 'Local';
   }
 
-  function showPopup(coords, props) {
-    if (currentPopup) currentPopup.remove();
-
-    var html =
-      '<div class="popup-scope ' + scopeClass(props.scope) + '">' + scopeLabel(props.scope) + '</div>' +
-      '<div class="popup-title">' + props.title + '</div>' +
-      '<div class="popup-source">' + props.source + '</div>' +
-      '<div class="popup-tap">Tap to read &rarr;</div>';
-
-    currentPopup = new maplibregl.Popup({ offset: 14, closeButton: true, maxWidth: '260px' })
-      .setLngLat(coords)
-      .setHTML(html)
-      .addTo(map);
-
-    // Tapping the popup opens the article
-    currentPopup.getElement().addEventListener('click', function(e) {
-      if (e.target.classList.contains('maplibregl-popup-close-button')) return;
-      try { Android.onMarkerTapped(props.id); } catch(ex) {}
-      currentPopup.remove();
-      currentPopup = null;
-    });
+  function showStoryCard(story) {
+    selectedStory = story;
+    var badge = document.getElementById('cardScope');
+    badge.textContent = scopeLabel(story.scope);
+    badge.className = 'scope-badge ' + scopeClass(story.scope);
+    document.getElementById('cardTitle').textContent = story.title;
+    document.getElementById('cardSource').textContent = story.source;
+    cardEl.classList.add('visible');
   }
 
-  function initMap() {
-    map = new maplibregl.Map({
-      container: 'globe',
-      style: {
-        version: 8,
-        glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
-        sources: {
-          'satellite': {
-            type: 'raster',
-            tiles: [
-              'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-            ],
-            tileSize: 256,
-            maxzoom: 19
-          }
-        },
-        layers: [{
-          id: 'satellite-layer',
-          type: 'raster',
-          source: 'satellite'
-        }],
-        sky: {
-          'atmosphere-blend': [
-            'interpolate', ['linear'], ['zoom'],
-            0, 1, 5, 1, 7, 0
-          ]
-        },
-        light: {
-          anchor: 'map',
-          position: [1.5, 90, 80]
-        }
-      },
-      center: [0, 20],
-      zoom: 1.5,
-      attributionControl: false,
-      maxPitch: 85
-    });
-
-    // Globe projection — explicit API call is more reliable in WebView
-    map.on('style.load', function() {
-      map.setProjection({ type: 'globe' });
-    });
-
-    map.on('load', function() {
-      // All markers in one source — clustering manages density naturally
-      map.addSource('stories', {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: [] },
-        cluster: true,
-        clusterMaxZoom: 11,
-        clusterRadius: 40
-      });
-
-      // ── Cluster layers ──
-
-      // Cluster outer glow
-      map.addLayer({
-        id: 'cluster-glow',
-        type: 'circle',
-        source: 'stories',
-        filter: ['has', 'point_count'],
-        paint: {
-          'circle-color': 'rgba(239, 83, 80, 0.12)',
-          'circle-radius': [
-            'step', ['get', 'point_count'],
-            28, 10, 34, 30, 42, 50, 50
-          ]
-        }
-      });
-
-      // Cluster circle
-      map.addLayer({
-        id: 'clusters',
-        type: 'circle',
-        source: 'stories',
-        filter: ['has', 'point_count'],
-        paint: {
-          'circle-color': [
-            'step', ['get', 'point_count'],
-            'rgba(239, 83, 80, 0.85)',
-            10, 'rgba(229, 57, 53, 0.9)',
-            30, 'rgba(198, 40, 40, 0.9)',
-            50, 'rgba(183, 28, 28, 0.95)'
-          ],
-          'circle-radius': [
-            'step', ['get', 'point_count'],
-            18, 10, 22, 30, 28, 50, 34
-          ],
-          'circle-stroke-width': 2,
-          'circle-stroke-color': 'rgba(255, 255, 255, 0.5)'
-        }
-      });
-
-      // Cluster count label
-      map.addLayer({
-        id: 'cluster-count',
-        type: 'symbol',
-        source: 'stories',
-        filter: ['has', 'point_count'],
-        layout: {
-          'text-field': '{point_count_abbreviated}',
-          'text-size': 13,
-          'text-font': ['Open Sans Semibold'],
-          'text-allow-overlap': true
-        },
-        paint: {
-          'text-color': '#ffffff',
-          'text-halo-color': 'rgba(0,0,0,0.4)',
-          'text-halo-width': 1
-        }
-      });
-
-      // ── Individual marker layers ──
-
-      // Outer glow ring
-      map.addLayer({
-        id: 'marker-glow',
-        type: 'circle',
-        source: 'stories',
-        filter: ['!', ['has', 'point_count']],
-        paint: {
-          'circle-color': [
-            'match', ['get', 'scope'],
-            'INTERNATIONAL', '#ef5350',
-            'NATIONAL', '#ffa726',
-            'LOCAL', '#66bb6a',
-            '#ef5350'
-          ],
-          'circle-radius': 16,
-          'circle-opacity': 0.12,
-          'circle-stroke-width': 0
-        }
-      });
-
-      // Marker dot
-      map.addLayer({
-        id: 'marker-dot',
-        type: 'circle',
-        source: 'stories',
-        filter: ['!', ['has', 'point_count']],
-        paint: {
-          'circle-color': [
-            'match', ['get', 'scope'],
-            'INTERNATIONAL', '#ef5350',
-            'NATIONAL', '#ffa726',
-            'LOCAL', '#66bb6a',
-            '#ef5350'
-          ],
-          'circle-radius': [
-            'interpolate', ['linear'], ['zoom'],
-            0, 5,
-            4, 7,
-            8, 9
-          ],
-          'circle-stroke-width': 2,
-          'circle-stroke-color': 'rgba(255, 255, 255, 0.7)'
-        }
-      });
-
-      // ── Interactions ──
-
-      // Cluster tap → zoom in to expand (standard map UX)
-      map.on('click', 'clusters', function(e) {
-        var features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
-        if (!features.length) return;
-        var clusterId = features[0].properties.cluster_id;
-        var source = map.getSource('stories');
-
-        source.getClusterExpansionZoom(clusterId, function(err, zoom) {
-          if (err) return;
-          map.easeTo({
-            center: features[0].geometry.coordinates,
-            zoom: Math.min(zoom, 12),
-            duration: 500
-          });
-        });
-      });
-
-      // Individual marker tap → show popup with headline
-      map.on('click', 'marker-dot', function(e) {
-        if (!e.features || !e.features.length) return;
-        var f = e.features[0];
-        showPopup(f.geometry.coordinates.slice(), f.properties);
-      });
-      map.on('click', 'marker-glow', function(e) {
-        if (!e.features || !e.features.length) return;
-        var f = e.features[0];
-        showPopup(f.geometry.coordinates.slice(), f.properties);
-      });
-
-      // Cursor hints
-      map.on('mouseenter', 'clusters', function() { map.getCanvas().style.cursor = 'pointer'; });
-      map.on('mouseleave', 'clusters', function() { map.getCanvas().style.cursor = ''; });
-      map.on('mouseenter', 'marker-dot', function() { map.getCanvas().style.cursor = 'pointer'; });
-      map.on('mouseleave', 'marker-dot', function() { map.getCanvas().style.cursor = ''; });
-
-      mapReady = true;
-
-      if (allMarkers.length > 0) {
-        applyMarkers();
-      }
-
-      // Show legend
-      document.getElementById('legend').classList.add('show');
-
-      try { Android.onGlobeReady(); } catch(e) {}
-    });
-
-    // Report altitude to Android
-    var lastReportedAlt = altitudeFromZoom(1.5);
-    map.on('moveend', function() {
-      var alt = altitudeFromZoom(map.getZoom());
-      if (Math.abs(alt - lastReportedAlt) > 0.05) {
-        lastReportedAlt = alt;
-        try { Android.onZoomChanged(String(alt)); } catch(e) {}
-      }
-    });
+  function hideStoryCard() {
+    cardEl.classList.remove('visible');
+    selectedStory = null;
   }
+
+  // Card interaction
+  cardEl.addEventListener('click', function(e) {
+    if (e.target.id === 'cardClose') {
+      hideStoryCard();
+      return;
+    }
+    if (selectedStory) {
+      try { Android.onMarkerTapped(selectedStory.id); } catch(ex) {}
+      hideStoryCard();
+    }
+  });
+
+  function initGlobe() {
+    var container = document.getElementById('globeContainer');
+
+    globe = Globe()
+      .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+      .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+      .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+      .showAtmosphere(true)
+      .atmosphereColor('#4da6ff')
+      .atmosphereAltitude(0.18)
+      .width(container.clientWidth)
+      .height(container.clientHeight)
+      .pointsData([])
+      .pointLat('lat')
+      .pointLng('lng')
+      .pointColor(function(d) { return scopeColor(d.scope); })
+      .pointAltitude(0.006)
+      .pointRadius(0.35)
+      .pointResolution(12)
+      .onPointClick(function(point) {
+        showStoryCard(point);
+      })
+      (container);
+
+    // Camera controls
+    var controls = globe.controls();
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.35;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.15;
+    controls.rotateSpeed = 0.8;
+    controls.zoomSpeed = 0.8;
+    controls.minDistance = 110;
+    controls.maxDistance = 500;
+
+    // Initial view
+    globe.pointOfView({ lat: 20, lng: 0, altitude: 2.5 });
+
+    // Report altitude changes to Android
+    var lastAlt = 2.5;
+    controls.addEventListener('change', function() {
+      var pov = globe.pointOfView();
+      if (pov && Math.abs(pov.altitude - lastAlt) > 0.1) {
+        lastAlt = pov.altitude;
+        try { Android.onZoomChanged(String(pov.altitude)); } catch(e) {}
+      }
+    });
+
+    // Auto-rotate: stop on touch, restart after idle
+    controls.addEventListener('start', function() {
+      controls.autoRotate = false;
+      if (idleTimer) clearTimeout(idleTimer);
+    });
+    controls.addEventListener('end', function() {
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(function() {
+        controls.autoRotate = true;
+      }, 10000);
+    });
+
+    // Handle resize
+    window.addEventListener('resize', function() {
+      globe.width(window.innerWidth).height(window.innerHeight);
+    });
+
+    // Show legend
+    document.getElementById('legend').classList.add('show');
+
+    // Notify Android
+    try { Android.onGlobeReady(); } catch(e) {}
+  }
+
+  // ── Bridge functions called from Android ──
 
   window.updateMarkers = function(jsonString) {
     try {
       allMarkers = JSON.parse(jsonString);
-      applyMarkers();
+      if (globe) {
+        globe.pointsData(allMarkers);
+        // Update count
+        var countEl = document.getElementById('storyCount');
+        countEl.textContent = allMarkers.length + ' stories worldwide';
+        countEl.classList.add('show');
+      }
     } catch(e) {
       console.error('updateMarkers error:', e);
     }
   };
 
   window.flyTo = function(lat, lng, altitude) {
-    if (!map) return;
-    if (currentPopup) { currentPopup.remove(); currentPopup = null; }
-    var zoom = zoomFromAltitude(altitude);
-    map.flyTo({ center: [lng, lat], zoom: zoom, duration: 1500 });
+    if (!globe) return;
+    hideStoryCard();
+    globe.pointOfView({ lat: lat, lng: lng, altitude: altitude }, 1500);
   };
 
-  initMap();
+  // ── Init ──
+  initGlobe();
 })();
 </script>
 </body>

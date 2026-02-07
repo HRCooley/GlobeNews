@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
@@ -59,7 +60,8 @@ fun GlobeWebView(
             settings.allowContentAccess = true
             webChromeClient = WebChromeClient()
             webViewClient = WebViewClient()
-            setBackgroundColor(0xFF0a0a1a.toInt())
+            setLayerType(View.LAYER_TYPE_HARDWARE, null)
+            setBackgroundColor(0xFF000000.toInt())
         }
     }
 
