@@ -299,6 +299,10 @@
       summaryEl.style.display = 'none';
     }
 
+    // Nuke any stale inline styles from previous swipe, force reflow
+    cardEl.removeAttribute('style');
+    cardEl.classList.remove('visible');
+    void cardEl.offsetHeight; // force browser to render hidden state
     cardEl.classList.add('visible');
     legendEl.classList.add('card-open');
 
@@ -307,6 +311,7 @@
   }
 
   function hideStoryCard() {
+    cardEl.removeAttribute('style');
     cardEl.classList.remove('visible');
     legendEl.classList.remove('card-open');
     if (highlightedId && markerElements[highlightedId]) {
@@ -316,15 +321,20 @@
     highlightedId = null;
   }
 
+  function openSelectedArticle() {
+    if (selectedStory) {
+      var id = selectedStory.id;
+      hideStoryCard();
+      try { Android.onMarkerTapped(id); } catch(ex) {}
+    }
+  }
+
   // ── Card Interactions ──
 
-  // "Read article" button → open article directly
+  // "Read article" button
   readBtn.addEventListener('click', function(e) {
     e.stopPropagation();
-    if (selectedStory) {
-      try { Android.onMarkerTapped(selectedStory.id); } catch(ex) {}
-      hideStoryCard();
-    }
+    openSelectedArticle();
   });
 
   // Close button
@@ -333,20 +343,16 @@
     hideStoryCard();
   });
 
-  // Handle area tap → dismiss
-  document.getElementById('handleArea').addEventListener('click', function(e) {
-    e.stopPropagation();
-    hideStoryCard();
-  });
-
-  // Swipe-to-dismiss
+  // Swipe gestures: down → dismiss, up → open article
+  // Handle tap (no movement) → dismiss
   var swipeStartY = 0;
   var swipeDelta = 0;
   var isSwiping = false;
+  var SWIPE_TRANSITION = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
 
   cardEl.addEventListener('touchstart', function(e) {
     var tag = e.target.id;
-    if (tag === 'cardClose' || tag === 'readBtn' || tag === 'handleArea') return;
+    if (tag === 'cardClose' || tag === 'readBtn') return;
     swipeStartY = e.touches[0].clientY;
     swipeDelta = 0;
     isSwiping = true;
@@ -357,18 +363,42 @@
     if (!isSwiping) return;
     swipeDelta = e.touches[0].clientY - swipeStartY;
     if (swipeDelta > 0) {
+      // Drag down freely
       cardEl.style.transform = 'translateY(' + swipeDelta + 'px)';
+    } else {
+      // Drag up with resistance
+      cardEl.style.transform = 'translateY(' + (swipeDelta * 0.3) + 'px)';
     }
   }, { passive: true });
 
-  cardEl.addEventListener('touchend', function() {
+  cardEl.addEventListener('touchend', function(e) {
     if (!isSwiping) return;
     isSwiping = false;
-    cardEl.style.transition = 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)';
+
     if (swipeDelta > 80) {
-      hideStoryCard();
+      // Swiped down → animate off-screen then clean up
+      cardEl.style.transition = SWIPE_TRANSITION;
+      cardEl.style.transform = 'translateY(100%)';
+      setTimeout(function() { hideStoryCard(); }, 300);
+    } else if (swipeDelta < -60) {
+      // Swiped up → snap back then open article
+      cardEl.style.transition = SWIPE_TRANSITION;
+      cardEl.style.transform = 'translateY(0)';
+      openSelectedArticle();
+    } else if (Math.abs(swipeDelta) < 5) {
+      // Tap (no real drag) on handle → dismiss
+      var t = e.target;
+      if (t.id === 'handleArea' || t.classList.contains('handle-bar')) {
+        hideStoryCard();
+      } else {
+        cardEl.removeAttribute('style');
+      }
     } else {
-      cardEl.style.transform = cardEl.classList.contains('visible') ? 'translateY(0)' : 'translateY(100%)';
+      // Small drag, snap back
+      cardEl.style.transition = SWIPE_TRANSITION;
+      cardEl.style.transform = 'translateY(0)';
+      // Clean up inline styles after animation
+      setTimeout(function() { cardEl.removeAttribute('style'); }, 350);
     }
   }, { passive: true });
 
