@@ -409,7 +409,6 @@
 
     globe = Globe()
       .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-      .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
       .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
       .showAtmosphere(true)
       .atmosphereColor('#4da6ff')
@@ -424,6 +423,17 @@
         return createMarkerEl(d);
       })
       (container);
+
+    // Switch to satellite tile engine (ESRI World Imagery)
+    // Blue Marble stays as base while tiles stream in
+    try {
+      globe.globeTileEngineUrl(function(x, y, l) {
+        return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/' + l + '/' + y + '/' + x;
+      });
+    } catch(e) {
+      // If tile engine not supported, Blue Marble texture is already loaded
+      console.log('Tile engine not available, using static texture');
+    }
 
     // Camera controls
     var controls = globe.controls();
