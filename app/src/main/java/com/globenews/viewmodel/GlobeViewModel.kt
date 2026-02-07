@@ -52,7 +52,7 @@ class GlobeViewModel(application: Application) : AndroidViewModel(application) {
     fun onStorySelected(storyId: String) {
         val story = _uiState.value.allStories.find { it.id == storyId }
         if (story != null) {
-            _uiState.value = _uiState.value.copy(sheetStories = listOf(story))
+            openArticle(story)
         }
     }
 

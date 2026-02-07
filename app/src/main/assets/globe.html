@@ -8,7 +8,47 @@
   body { background: #000; overflow: hidden; width: 100vw; height: 100vh; touch-action: none; }
   #globeContainer { width: 100%; height: 100%; }
 
-  /* Story card - slides up from bottom */
+  /* ── Markers ── */
+  .marker {
+    position: relative;
+    width: 32px; height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+  }
+  .marker-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    transition: all 0.3s ease;
+  }
+  .marker-dot.int { background: #ff5252; box-shadow: 0 0 8px 2px rgba(255,82,82,0.6); }
+  .marker-dot.nat { background: #ffab40; box-shadow: 0 0 8px 2px rgba(255,171,64,0.6); }
+  .marker-dot.loc { background: #69f0ae; box-shadow: 0 0 8px 2px rgba(105,240,174,0.6); }
+  .marker-ping {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    opacity: 0;
+  }
+  .marker-ping.int { background: rgba(255,82,82,0.4); }
+  .marker-ping.nat { background: rgba(255,171,64,0.4); }
+  .marker-ping.loc { background: rgba(105,240,174,0.4); }
+  .marker-ping { animation: ping 3s ease-out infinite; }
+  @keyframes ping {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(3); opacity: 0; }
+  }
+  .marker.selected .marker-dot {
+    background: #fff;
+    box-shadow: 0 0 14px 4px rgba(255,255,255,0.7), 0 0 30px 8px rgba(100,181,246,0.3);
+    width: 16px; height: 16px;
+  }
+  .marker.selected .marker-ping { animation: none; opacity: 0; }
+
+  /* ── Story card ── */
   #storyCard {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -23,7 +63,6 @@
     z-index: 100;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: #fff;
-    cursor: pointer;
     will-change: transform;
     max-height: 55vh;
     overflow-y: auto;
@@ -47,18 +86,6 @@
   #storyCard .scope-badge.int { background: rgba(255,82,82,0.2); color: #ff5252; }
   #storyCard .scope-badge.nat { background: rgba(255,171,64,0.2); color: #ffab40; }
   #storyCard .scope-badge.loc { background: rgba(105,240,174,0.2); color: #69f0ae; }
-  #storyCard .location {
-    font-size: 11px;
-    color: rgba(255,255,255,0.4);
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  #storyCard .location::before {
-    content: '\1F4CD';
-    font-size: 10px;
-  }
   #storyCard .title {
     font-size: 17px; font-weight: 600;
     line-height: 1.35;
@@ -72,7 +99,7 @@
     font-size: 13px;
     line-height: 1.5;
     color: rgba(255,255,255,0.6);
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -83,11 +110,14 @@
     font-size: 13px; font-weight: 600;
     color: #64b5f6;
     letter-spacing: 0.5px;
-    padding: 8px 16px;
-    background: rgba(100, 181, 246, 0.1);
-    border-radius: 8px;
+    padding: 10px 20px;
+    background: rgba(100, 181, 246, 0.12);
+    border-radius: 10px;
+    cursor: pointer;
     transition: background 0.2s;
+    -webkit-tap-highlight-color: rgba(100, 181, 246, 0.2);
   }
+  #storyCard .read-btn:active { background: rgba(100, 181, 246, 0.25); }
   #storyCard .close-btn {
     position: absolute;
     top: 12px; right: 14px;
@@ -105,7 +135,7 @@
   }
   #storyCard .close-btn:active { background: rgba(255,255,255,0.15); }
 
-  /* Legend */
+  /* ── Legend ── */
   #legend {
     position: fixed;
     bottom: 20px; left: 14px;
@@ -116,10 +146,10 @@
     pointer-events: none;
     z-index: 10;
     opacity: 0;
-    transition: opacity 1s ease 0.5s;
+    transition: opacity 1s ease 0.5s, bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
   #legend.show { opacity: 1; }
-  #legend.card-open { bottom: 88px; transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+  #legend.card-open { bottom: 88px; }
   .legend-item { display: flex; align-items: center; gap: 6px; }
   .legend-dot {
     width: 8px; height: 8px;
@@ -128,7 +158,7 @@
     flex-shrink: 0;
   }
 
-  /* Story count badge */
+  /* ── Story count ── */
   #storyCount {
     position: fixed;
     top: 96px; right: 14px;
@@ -141,20 +171,6 @@
     transition: opacity 1s ease 0.8s;
   }
   #storyCount.show { opacity: 1; }
-
-  /* Loading overlay for globe textures */
-  #globeLoader {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 11px;
-    color: rgba(255,255,255,0.3);
-    z-index: 50;
-    transition: opacity 0.5s;
-  }
-  #globeLoader.hide { opacity: 0; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -164,11 +180,10 @@
   <div class="handle"></div>
   <button class="close-btn" id="cardClose">&times;</button>
   <div class="scope-badge" id="cardScope"></div>
-  <div class="location" id="cardLocation"></div>
   <div class="title" id="cardTitle"></div>
   <div class="source" id="cardSource"></div>
   <div class="summary" id="cardSummary"></div>
-  <div class="read-btn">Read article &rarr;</div>
+  <div class="read-btn" id="readBtn">Read article &rarr;</div>
 </div>
 
 <div id="legend">
@@ -178,7 +193,6 @@
 </div>
 
 <div id="storyCount"></div>
-<div id="globeLoader">Loading globe textures...</div>
 
 <script src="https://unpkg.com/globe.gl@2.33.0"></script>
 <script>
@@ -187,18 +201,11 @@
   var allMarkers = [];
   var selectedStory = null;
   var highlightedId = null;
+  var markerElements = {};
   var cardEl = document.getElementById('storyCard');
   var legendEl = document.getElementById('legend');
-  var loaderEl = document.getElementById('globeLoader');
+  var readBtn = document.getElementById('readBtn');
   var idleTimer = null;
-  var pulsePhase = 0;
-  var animFrame = null;
-
-  function scopeColor(scope) {
-    if (scope === 'INTERNATIONAL') return '#ff5252';
-    if (scope === 'NATIONAL') return '#ffab40';
-    return '#69f0ae';
-  }
 
   function scopeClass(scope) {
     if (scope === 'INTERNATIONAL') return 'int';
@@ -212,23 +219,49 @@
     return 'Local';
   }
 
+  // ── Marker Elements ──
+
+  function createMarkerEl(d) {
+    var el = document.createElement('div');
+    el.className = 'marker';
+    var sc = scopeClass(d.scope);
+
+    var dot = document.createElement('div');
+    dot.className = 'marker-dot ' + sc;
+    el.appendChild(dot);
+
+    var ping = document.createElement('div');
+    ping.className = 'marker-ping ' + sc;
+    // Stagger animation delay
+    ping.style.animationDelay = (Math.random() * 3).toFixed(1) + 's';
+    el.appendChild(ping);
+
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      showStoryCard(d);
+    });
+
+    markerElements[d.id] = el;
+    return el;
+  }
+
   // ── Story Card ──
 
   function showStoryCard(story) {
     selectedStory = story;
+
+    // Update highlight
+    if (highlightedId && markerElements[highlightedId]) {
+      markerElements[highlightedId].classList.remove('selected');
+    }
     highlightedId = story.id;
+    if (markerElements[highlightedId]) {
+      markerElements[highlightedId].classList.add('selected');
+    }
 
     var badge = document.getElementById('cardScope');
     badge.textContent = scopeLabel(story.scope);
     badge.className = 'scope-badge ' + scopeClass(story.scope);
-
-    var locEl = document.getElementById('cardLocation');
-    if (story.location) {
-      locEl.textContent = story.location;
-      locEl.style.display = 'flex';
-    } else {
-      locEl.style.display = 'none';
-    }
 
     document.getElementById('cardTitle').textContent = story.title;
     document.getElementById('cardSource').textContent = story.source;
@@ -244,9 +277,6 @@
     cardEl.classList.add('visible');
     legendEl.classList.add('card-open');
 
-    // Refresh marker visuals for highlight ring
-    if (globe) globe.pointsData(allMarkers);
-
     // Fly to the story location
     globe.pointOfView({ lat: story.lat, lng: story.lng, altitude: 1.8 }, 1200);
   }
@@ -254,19 +284,38 @@
   function hideStoryCard() {
     cardEl.classList.remove('visible');
     legendEl.classList.remove('card-open');
+    if (highlightedId && markerElements[highlightedId]) {
+      markerElements[highlightedId].classList.remove('selected');
+    }
     selectedStory = null;
     highlightedId = null;
-    if (globe) globe.pointsData(allMarkers);
   }
 
-  // ── Swipe-to-dismiss ──
+  // ── Card Interactions ──
 
+  // "Read article" button → open article directly
+  readBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (selectedStory) {
+      try { Android.onMarkerTapped(selectedStory.id); } catch(ex) {}
+      hideStoryCard();
+    }
+  });
+
+  // Close button
+  document.getElementById('cardClose').addEventListener('click', function(e) {
+    e.stopPropagation();
+    hideStoryCard();
+  });
+
+  // Swipe-to-dismiss
   var swipeStartY = 0;
   var swipeDelta = 0;
   var isSwiping = false;
 
   cardEl.addEventListener('touchstart', function(e) {
-    if (e.target.id === 'cardClose') return;
+    var tag = e.target.id;
+    if (tag === 'cardClose' || tag === 'readBtn') return;
     swipeStartY = e.touches[0].clientY;
     swipeDelta = 0;
     isSwiping = true;
@@ -292,40 +341,6 @@
     }
   }, { passive: true });
 
-  // Card click interaction
-  cardEl.addEventListener('click', function(e) {
-    if (e.target.id === 'cardClose') {
-      hideStoryCard();
-      return;
-    }
-    if (selectedStory) {
-      try { Android.onMarkerTapped(selectedStory.id); } catch(ex) {}
-      hideStoryCard();
-    }
-  });
-
-  // ── Pulse Animation ──
-
-  function startPulse() {
-    function animate() {
-      pulsePhase += 0.025;
-      if (pulsePhase > Math.PI * 2) pulsePhase -= Math.PI * 2;
-      animFrame = requestAnimationFrame(animate);
-    }
-    animate();
-  }
-
-  function getPulseAltitude(d) {
-    if (d.id === highlightedId) return 0.025;
-    var offset = (d._idx || 0) * 0.3;
-    return 0.004 + 0.003 * Math.sin(pulsePhase + offset);
-  }
-
-  function getPulseRadius(d) {
-    if (d.id === highlightedId) return 0.6;
-    return 0.35;
-  }
-
   // ── Globe Init ──
 
   function initGlobe() {
@@ -340,18 +355,12 @@
       .atmosphereAltitude(0.18)
       .width(container.clientWidth)
       .height(container.clientHeight)
-      .pointsData([])
-      .pointLat('lat')
-      .pointLng('lng')
-      .pointColor(function(d) {
-        if (d.id === highlightedId) return '#ffffff';
-        return scopeColor(d.scope);
-      })
-      .pointAltitude(getPulseAltitude)
-      .pointRadius(getPulseRadius)
-      .pointResolution(12)
-      .onPointClick(function(point) {
-        showStoryCard(point);
+      .htmlElementsData([])
+      .htmlLat('lat')
+      .htmlLng('lng')
+      .htmlAltitude(0.01)
+      .htmlElement(function(d) {
+        return createMarkerEl(d);
       })
       (container);
 
@@ -383,7 +392,7 @@
     controls.addEventListener('start', function() {
       controls.autoRotate = false;
       if (idleTimer) clearTimeout(idleTimer);
-      // Dismiss story card on globe interaction (unless touching the card)
+      // Dismiss story card when user interacts with globe
       if (selectedStory) {
         hideStoryCard();
       }
@@ -400,17 +409,8 @@
       globe.width(window.innerWidth).height(window.innerHeight);
     });
 
-    // Hide loader once globe image loads
-    var globeObj = globe.scene().children.find(function(c) { return c.type === 'Group'; });
-    setTimeout(function() {
-      loaderEl.classList.add('hide');
-    }, 3000);
-
     // Show legend
     legendEl.classList.add('show');
-
-    // Start pulse animation
-    startPulse();
 
     // Notify Android
     try { Android.onGlobeReady(); } catch(e) {}
@@ -421,13 +421,9 @@
   window.updateMarkers = function(jsonString) {
     try {
       allMarkers = JSON.parse(jsonString);
-      // Assign an index for staggered pulse
-      for (var i = 0; i < allMarkers.length; i++) {
-        allMarkers[i]._idx = i;
-      }
+      markerElements = {};
       if (globe) {
-        globe.pointsData(allMarkers);
-        // Update count
+        globe.htmlElementsData(allMarkers);
         var countEl = document.getElementById('storyCount');
         countEl.textContent = allMarkers.length + ' stories worldwide';
         countEl.classList.add('show');
