@@ -71,11 +71,17 @@
     overflow-y: auto;
   }
   #storyCard.visible { transform: translateY(0); }
-  #storyCard .handle {
+  #storyCard .handle-area {
+    width: 100%;
+    padding: 8px 0 14px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #storyCard .handle-bar {
     width: 36px; height: 4px;
     background: rgba(255,255,255,0.25);
     border-radius: 2px;
-    margin: 0 auto 14px;
+    margin: 0 auto;
   }
   #storyCard .scope-badge {
     display: inline-block;
@@ -180,7 +186,7 @@
 <div id="globeContainer"></div>
 
 <div id="storyCard">
-  <div class="handle"></div>
+  <div class="handle-area" id="handleArea"><div class="handle-bar"></div></div>
   <button class="close-btn" id="cardClose">&times;</button>
   <div class="scope-badge" id="cardScope"></div>
   <div class="title" id="cardTitle"></div>
@@ -327,6 +333,12 @@
     hideStoryCard();
   });
 
+  // Handle area tap → dismiss
+  document.getElementById('handleArea').addEventListener('click', function(e) {
+    e.stopPropagation();
+    hideStoryCard();
+  });
+
   // Swipe-to-dismiss
   var swipeStartY = 0;
   var swipeDelta = 0;
@@ -334,7 +346,7 @@
 
   cardEl.addEventListener('touchstart', function(e) {
     var tag = e.target.id;
-    if (tag === 'cardClose' || tag === 'readBtn') return;
+    if (tag === 'cardClose' || tag === 'readBtn' || tag === 'handleArea') return;
     swipeStartY = e.touches[0].clientY;
     swipeDelta = 0;
     isSwiping = true;
