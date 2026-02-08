@@ -430,6 +430,7 @@
       globe.globeTileEngineUrl(function(x, y, l) {
         return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/' + l + '/' + y + '/' + x;
       });
+      globe.globeTileEngineMaxLevel(19);
     } catch(e) {
       // If tile engine not supported, Blue Marble texture is already loaded
       console.log('Tile engine not available, using static texture');
@@ -443,7 +444,7 @@
     controls.dampingFactor = 0.15;
     controls.rotateSpeed = 0.8;
     controls.zoomSpeed = 0.8;
-    controls.minDistance = 110;
+    controls.minDistance = 101;
     controls.maxDistance = 500;
 
     // Initial view
