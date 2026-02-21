@@ -3,6 +3,8 @@ package com.globenews.ui
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
@@ -11,6 +13,7 @@ import android.webkit.WebViewClient
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
@@ -43,6 +46,7 @@ fun GlobeWebView(
     val currentOnGlobeReady = rememberUpdatedState(onGlobeReady)
 
     val mainHandler = remember { Handler(Looper.getMainLooper()) }
+    val isMapReady = remember { mutableStateOf(false) }
 
     val webView = remember {
         WebView(context).apply {
@@ -56,7 +60,8 @@ fun GlobeWebView(
             settings.allowContentAccess = true
             webChromeClient = WebChromeClient()
             webViewClient = WebViewClient()
-            setBackgroundColor(0xFF0a0a1a.toInt())
+            setLayerType(View.LAYER_TYPE_HARDWARE, null)
+            setBackgroundColor(0xFF000000.toInt())
         }
     }
 
@@ -67,7 +72,9 @@ fun GlobeWebView(
                 try {
                     val alt = altitude.toDouble()
                     mainHandler.post { currentOnZoomChanged.value(alt) }
-                } catch (_: Exception) {}
+                } catch (e: Exception) {
+                    Log.w("GlobeWebView", "Failed to parse zoom altitude: $altitude", e)
+                }
             }
 
             @JavascriptInterface
@@ -84,12 +91,17 @@ fun GlobeWebView(
                         ids.add(arr.getString(i))
                     }
                     mainHandler.post { currentOnClusterTapped.value(ids) }
-                } catch (_: Exception) {}
+                } catch (e: Exception) {
+                    Log.w("GlobeWebView", "Failed to parse cluster IDs: $idsJson", e)
+                }
             }
 
             @JavascriptInterface
             fun onGlobeReady() {
-                mainHandler.post { currentOnGlobeReady.value() }
+                mainHandler.post {
+                    isMapReady.value = true
+                    currentOnGlobeReady.value()
+                }
             }
         }
     }
@@ -103,15 +115,16 @@ fun GlobeWebView(
         }
     }
 
-    // Update stories whenever they change
-    LaunchedEffect(stories) {
-        if (stories.isNotEmpty()) {
+    // Update stories whenever they change or when the map becomes ready
+    LaunchedEffect(stories, isMapReady.value) {
+        if (stories.isNotEmpty() && isMapReady.value) {
             val jsonArray = JSONArray()
             for (story in stories) {
                 val obj = JSONObject()
                 obj.put("id", story.id)
                 obj.put("title", story.title)
                 obj.put("source", story.source)
+                obj.put("summary", story.summary)
                 obj.put("lat", story.latitude)
                 obj.put("lng", story.longitude)
                 obj.put("scope", story.scope.name)

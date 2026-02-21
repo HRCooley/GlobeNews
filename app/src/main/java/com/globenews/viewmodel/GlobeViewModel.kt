@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.globenews.data.GeocodingHelper
 import com.globenews.data.NewsRepository
 import com.globenews.data.NewsStory
-import com.globenews.data.StoryScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,14 +13,13 @@ import kotlinx.coroutines.launch
 
 data class GlobeUiState(
     val allStories: List<NewsStory> = emptyList(),
-    val visibleStories: List<NewsStory> = emptyList(),
     val sheetStories: List<NewsStory> = emptyList(),
     val articleUrl: String? = null,
     val articleTitle: String = "",
     val isLoading: Boolean = true,
     val globeReady: Boolean = false,
-    val zoomLevel: Double = 1.5,
     val searchQuery: String = "",
+    val searchNotFound: Boolean = false,
     val flyToLat: Double? = null,
     val flyToLng: Double? = null,
     val flyToAltitude: Double? = null
@@ -31,12 +29,6 @@ class GlobeViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = NewsRepository(application)
     private val _uiState = MutableStateFlow(GlobeUiState())
     val uiState: StateFlow<GlobeUiState> = _uiState.asStateFlow()
-
-    companion object {
-        const val ZOOM_INTERNATIONAL = 1.5
-        const val ZOOM_NATIONAL = 0.6
-        const val ZOOM_LOCAL = 0.2
-    }
 
     init {
         loadNews()
@@ -50,29 +42,17 @@ class GlobeViewModel(application: Application) : AndroidViewModel(application) {
                 allStories = stories,
                 isLoading = false
             )
-            filterStoriesByZoom(_uiState.value.zoomLevel)
         }
     }
 
     fun onZoomChanged(altitude: Double) {
-        _uiState.value = _uiState.value.copy(zoomLevel = altitude)
-        filterStoriesByZoom(altitude)
-    }
-
-    private fun filterStoriesByZoom(altitude: Double) {
-        val stories = _uiState.value.allStories
-        val filtered = when {
-            altitude > ZOOM_INTERNATIONAL -> stories.filter { it.scope == StoryScope.INTERNATIONAL }
-            altitude > ZOOM_NATIONAL -> stories.filter { it.scope == StoryScope.INTERNATIONAL || it.scope == StoryScope.NATIONAL }
-            else -> stories
-        }
-        _uiState.value = _uiState.value.copy(visibleStories = filtered)
+        // Zoom tracking available for future use
     }
 
     fun onStorySelected(storyId: String) {
         val story = _uiState.value.allStories.find { it.id == storyId }
         if (story != null) {
-            _uiState.value = _uiState.value.copy(sheetStories = listOf(story))
+            openArticle(story)
         }
     }
 
@@ -104,18 +84,27 @@ class GlobeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onSearchQueryChanged(query: String) {
-        _uiState.value = _uiState.value.copy(searchQuery = query)
+        _uiState.value = _uiState.value.copy(searchQuery = query, searchNotFound = false)
     }
 
     fun onSearch() {
-        val location = GeocodingHelper.search(_uiState.value.searchQuery)
+        val query = _uiState.value.searchQuery.trim()
+        if (query.isEmpty()) return
+        val location = GeocodingHelper.search(query)
         if (location != null) {
             _uiState.value = _uiState.value.copy(
                 flyToLat = location.lat,
                 flyToLng = location.lng,
-                flyToAltitude = 0.4
+                flyToAltitude = 0.4,
+                searchNotFound = false
             )
+        } else {
+            _uiState.value = _uiState.value.copy(searchNotFound = true)
         }
+    }
+
+    fun clearSearch() {
+        _uiState.value = _uiState.value.copy(searchQuery = "", searchNotFound = false)
     }
 
     fun clearFlyTo() {

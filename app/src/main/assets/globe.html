@@ -3,241 +3,516 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #0a0a1a;
-    overflow: hidden;
-    width: 100vw;
-    height: 100vh;
+  body { background: #000; overflow: hidden; width: 100vw; height: 100vh; touch-action: none; }
+  #globeContainer { width: 100%; height: 100%; }
+
+  /* ── Markers ── */
+  .marker {
+    position: relative;
+    width: 36px; height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: auto !important;
+    margin-left: -18px;
+    margin-top: -18px;
+    -webkit-tap-highlight-color: transparent;
   }
-  #globe { width: 100%; height: 100%; }
-  .maplibregl-ctrl-attrib { display: none !important; }
-  .maplibregl-ctrl-logo { display: none !important; }
+  .marker-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    transition: all 0.3s ease;
+  }
+  .marker-dot.int { background: #ff5252; box-shadow: 0 0 8px 2px rgba(255,82,82,0.6); }
+  .marker-dot.nat { background: #ffab40; box-shadow: 0 0 8px 2px rgba(255,171,64,0.6); }
+  .marker-dot.loc { background: #69f0ae; box-shadow: 0 0 8px 2px rgba(105,240,174,0.6); }
+  .marker-ping {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    opacity: 0;
+  }
+  .marker-ping.int { background: rgba(255,82,82,0.4); }
+  .marker-ping.nat { background: rgba(255,171,64,0.4); }
+  .marker-ping.loc { background: rgba(105,240,174,0.4); }
+  .marker-ping { animation: ping 3s ease-out infinite; }
+  @keyframes ping {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(3); opacity: 0; }
+  }
+  .marker.selected .marker-dot {
+    background: #fff;
+    box-shadow: 0 0 14px 4px rgba(255,255,255,0.7), 0 0 30px 8px rgba(100,181,246,0.3);
+    width: 16px; height: 16px;
+  }
+  .marker.selected .marker-ping { animation: none; opacity: 0; }
+
+  /* ── Story card ── */
+  #storyCard {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(15, 15, 30, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(100, 181, 246, 0.25);
+    border-radius: 20px 20px 0 0;
+    padding: 12px 20px 28px;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #fff;
+    will-change: transform;
+    max-height: 55vh;
+    overflow-y: auto;
+  }
+  #storyCard.visible { transform: translateY(0); }
+  #storyCard .handle-area {
+    width: 100%;
+    padding: 8px 0 14px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #storyCard .handle-bar {
+    width: 36px; height: 4px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 2px;
+    margin: 0 auto;
+  }
+  #storyCard .scope-badge {
+    display: inline-block;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  #storyCard .scope-badge.int { background: rgba(255,82,82,0.2); color: #ff5252; }
+  #storyCard .scope-badge.nat { background: rgba(255,171,64,0.2); color: #ffab40; }
+  #storyCard .scope-badge.loc { background: rgba(105,240,174,0.2); color: #69f0ae; }
+  #storyCard .title {
+    font-size: 17px; font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 6px;
+  }
+  #storyCard .source {
+    font-size: 12px; color: #999;
+    margin-bottom: 8px;
+  }
+  #storyCard .summary {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  #storyCard .read-btn {
+    display: inline-block;
+    font-size: 13px; font-weight: 600;
+    color: #64b5f6;
+    letter-spacing: 0.5px;
+    padding: 10px 20px;
+    background: rgba(100, 181, 246, 0.12);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    -webkit-tap-highlight-color: rgba(100, 181, 246, 0.2);
+  }
+  #storyCard .read-btn:active { background: rgba(100, 181, 246, 0.25); }
+  #storyCard .close-btn {
+    position: absolute;
+    top: 12px; right: 14px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: #888;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  #storyCard .close-btn:active { background: rgba(255,255,255,0.15); }
+
+  /* ── Legend ── */
+  #legend {
+    position: fixed;
+    bottom: 20px; left: 14px;
+    display: flex; flex-direction: column; gap: 5px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1s ease 0.5s, bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #legend.show { opacity: 1; }
+  #legend.card-open { bottom: 88px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.4);
+    flex-shrink: 0;
+  }
+
+  /* ── Story count ── */
+  #storyCount {
+    position: fixed;
+    top: 96px; right: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1s ease 0.8s;
+  }
+  #storyCount.show { opacity: 1; }
 </style>
 </head>
 <body>
-<div id="globe"></div>
+<div id="globeContainer"></div>
 
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<div id="storyCard">
+  <div class="handle-area" id="handleArea"><div class="handle-bar"></div></div>
+  <button class="close-btn" id="cardClose">&times;</button>
+  <div class="scope-badge" id="cardScope"></div>
+  <div class="title" id="cardTitle"></div>
+  <div class="source" id="cardSource"></div>
+  <div class="summary" id="cardSummary"></div>
+  <div class="read-btn" id="readBtn">Read article &rarr;</div>
+</div>
+
+<div id="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#ff5252"></div>Global</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ffab40"></div>National</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#69f0ae"></div>Local</div>
+</div>
+
+<div id="storyCount"></div>
+
+<script src="https://unpkg.com/globe.gl@2.45.0"></script>
 <script>
 (function() {
-  let map = null;
-  let currentMarkers = [];
+  var globe = null;
+  var allMarkers = [];
+  var selectedStory = null;
+  var highlightedId = null;
+  var markerElements = {};
+  var cardEl = document.getElementById('storyCard');
+  var legendEl = document.getElementById('legend');
+  var readBtn = document.getElementById('readBtn');
+  var idleTimer = null;
 
-  // Convert MapLibre zoom to Globe.gl-style altitude for ViewModel compatibility
-  function altitudeFromZoom(zoom) {
-    return 3.0 / Math.pow(2, zoom);
+  function scopeClass(scope) {
+    if (scope === 'INTERNATIONAL') return 'int';
+    if (scope === 'NATIONAL') return 'nat';
+    return 'loc';
   }
 
-  // Convert Globe.gl-style altitude to MapLibre zoom
-  function zoomFromAltitude(altitude) {
-    return Math.log2(3.0 / Math.max(altitude, 0.01));
+  function scopeLabel(scope) {
+    if (scope === 'INTERNATIONAL') return 'Global';
+    if (scope === 'NATIONAL') return 'National';
+    return 'Local';
   }
 
-  function initMap() {
-    map = new maplibregl.Map({
-      container: 'globe',
-      style: {
-        version: 8,
-        glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
-        sources: {
-          'satellite': {
-            type: 'raster',
-            tiles: [
-              'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-            ],
-            tileSize: 256,
-            maxzoom: 19
-          }
-        },
-        layers: [{
-          id: 'satellite-layer',
-          type: 'raster',
-          source: 'satellite'
-        }]
-      },
-      center: [0, 20],
-      zoom: 1.5,
-      projection: 'globe',
-      attributionControl: false,
-      maxPitch: 85
-    });
+  // ── Marker Elements ──
 
-    // Atmosphere effect
-    map.on('style.load', function() {
-      map.setFog({
-        range: [0.5, 10],
-        color: 'rgba(186, 210, 235, 0.2)',
-        'high-color': 'rgba(36, 92, 223, 0.4)',
-        'horizon-blend': 0.03,
-        'space-color': 'rgb(10, 10, 26)',
-        'star-intensity': 0.6
-      });
-    });
+  function createMarkerEl(d) {
+    var el = document.createElement('div');
+    el.className = 'marker';
+    el.style.pointerEvents = 'auto';
+    var sc = scopeClass(d.scope);
 
-    map.on('load', function() {
-      // GeoJSON source with built-in clustering
-      map.addSource('stories', {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: [] },
-        cluster: true,
-        clusterMaxZoom: 12,
-        clusterRadius: 45
-      });
+    var dot = document.createElement('div');
+    dot.className = 'marker-dot ' + sc;
+    el.appendChild(dot);
 
-      // Glow ring behind individual markers
-      map.addLayer({
-        id: 'unclustered-glow',
-        type: 'circle',
-        source: 'stories',
-        filter: ['!', ['has', 'point_count']],
-        paint: {
-          'circle-color': [
-            'match', ['get', 'scope'],
-            'INTERNATIONAL', '#ef5350',
-            'NATIONAL', '#ffa726',
-            'LOCAL', '#66bb6a',
-            '#ef5350'
-          ],
-          'circle-radius': 14,
-          'circle-opacity': 0.15,
-          'circle-stroke-width': 0
-        }
-      });
+    var ping = document.createElement('div');
+    ping.className = 'marker-ping ' + sc;
+    ping.style.animationDelay = (Math.random() * 3).toFixed(1) + 's';
+    el.appendChild(ping);
 
-      // Individual marker dots
-      map.addLayer({
-        id: 'unclustered-point',
-        type: 'circle',
-        source: 'stories',
-        filter: ['!', ['has', 'point_count']],
-        paint: {
-          'circle-color': [
-            'match', ['get', 'scope'],
-            'INTERNATIONAL', '#ef5350',
-            'NATIONAL', '#ffa726',
-            'LOCAL', '#66bb6a',
-            '#ef5350'
-          ],
-          'circle-radius': 7,
-          'circle-stroke-width': 2,
-          'circle-stroke-color': 'rgba(255, 255, 255, 0.6)'
-        }
-      });
-
-      // Cluster circles
-      map.addLayer({
-        id: 'clusters',
-        type: 'circle',
-        source: 'stories',
-        filter: ['has', 'point_count'],
-        paint: {
-          'circle-color': 'rgba(239, 83, 80, 0.85)',
-          'circle-radius': [
-            'step', ['get', 'point_count'],
-            16,   // default
-            5, 20,
-            10, 24,
-            25, 28
-          ],
-          'circle-stroke-width': 2,
-          'circle-stroke-color': 'rgba(255, 255, 255, 0.5)'
-        }
-      });
-
-      // Cluster count labels
-      map.addLayer({
-        id: 'cluster-count',
-        type: 'symbol',
-        source: 'stories',
-        filter: ['has', 'point_count'],
-        layout: {
-          'text-field': '{point_count_abbreviated}',
-          'text-size': 12,
-          'text-font': ['Open Sans Bold']
-        },
-        paint: {
-          'text-color': '#ffffff'
-        }
-      });
-
-      // Click on cluster -> get leaves and send IDs to Android
-      map.on('click', 'clusters', function(e) {
-        const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
-        if (!features.length) return;
-        const clusterId = features[0].properties.cluster_id;
-        const source = map.getSource('stories');
-        source.getClusterLeaves(clusterId, 100, 0, function(err, leaves) {
-          if (err || !leaves) return;
-          const ids = leaves.map(function(f) { return f.properties.id; });
-          try { Android.onClusterTapped(JSON.stringify(ids)); } catch(ex) {}
-        });
-      });
-
-      // Click on individual marker
-      map.on('click', 'unclustered-point', function(e) {
-        if (!e.features || !e.features.length) return;
-        const id = e.features[0].properties.id;
-        try { Android.onMarkerTapped(id); } catch(ex) {}
-      });
-
-      // Also handle taps on the glow ring
-      map.on('click', 'unclustered-glow', function(e) {
-        if (!e.features || !e.features.length) return;
-        const id = e.features[0].properties.id;
-        try { Android.onMarkerTapped(id); } catch(ex) {}
-      });
-
-      // Notify Android that globe is ready
-      try { Android.onGlobeReady(); } catch(e) {}
-    });
-
-    // Track zoom changes
-    let lastReportedAlt = altitudeFromZoom(1.5);
-    function reportZoom() {
-      const alt = altitudeFromZoom(map.getZoom());
-      if (Math.abs(alt - lastReportedAlt) > 0.01) {
-        lastReportedAlt = alt;
-        try { Android.onZoomChanged(String(alt)); } catch(e) {}
+    // Use touchend for reliable taps on Android WebView
+    var touchMoved = false;
+    el.addEventListener('touchstart', function(e) {
+      touchMoved = false;
+    }, { passive: true });
+    el.addEventListener('touchmove', function() {
+      touchMoved = true;
+    }, { passive: true });
+    el.addEventListener('touchend', function(e) {
+      if (!touchMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+        showStoryCard(d);
       }
-    }
-    map.on('zoomend', reportZoom);
-    map.on('moveend', reportZoom);
+    });
+    // Fallback for non-touch
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      showStoryCard(d);
+    });
+
+    markerElements[d.id] = el;
+    return el;
   }
+
+  // ── Story Card ──
+
+  function showStoryCard(story) {
+    selectedStory = story;
+
+    // Update highlight
+    if (highlightedId && markerElements[highlightedId]) {
+      markerElements[highlightedId].classList.remove('selected');
+    }
+    highlightedId = story.id;
+    if (markerElements[highlightedId]) {
+      markerElements[highlightedId].classList.add('selected');
+    }
+
+    var badge = document.getElementById('cardScope');
+    badge.textContent = scopeLabel(story.scope);
+    badge.className = 'scope-badge ' + scopeClass(story.scope);
+
+    document.getElementById('cardTitle').textContent = story.title;
+    document.getElementById('cardSource').textContent = story.source;
+
+    var summaryEl = document.getElementById('cardSummary');
+    if (story.summary && story.summary.length > 0) {
+      summaryEl.textContent = story.summary;
+      summaryEl.style.display = '-webkit-box';
+    } else {
+      summaryEl.style.display = 'none';
+    }
+
+    // Nuke any stale inline styles from previous swipe, force reflow
+    cardEl.removeAttribute('style');
+    cardEl.classList.remove('visible');
+    void cardEl.offsetHeight; // force browser to render hidden state
+    cardEl.classList.add('visible');
+    legendEl.classList.add('card-open');
+
+    // Fly to the story location
+    globe.pointOfView({ lat: story.lat, lng: story.lng, altitude: 1.8 }, 1200);
+  }
+
+  function hideStoryCard() {
+    cardEl.removeAttribute('style');
+    cardEl.classList.remove('visible');
+    legendEl.classList.remove('card-open');
+    if (highlightedId && markerElements[highlightedId]) {
+      markerElements[highlightedId].classList.remove('selected');
+    }
+    selectedStory = null;
+    highlightedId = null;
+  }
+
+  function openSelectedArticle() {
+    if (selectedStory) {
+      var id = selectedStory.id;
+      hideStoryCard();
+      try { Android.onMarkerTapped(id); } catch(ex) {}
+    }
+  }
+
+  // ── Card Interactions ──
+
+  // "Read article" button
+  readBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    openSelectedArticle();
+  });
+
+  // Close button
+  document.getElementById('cardClose').addEventListener('click', function(e) {
+    e.stopPropagation();
+    hideStoryCard();
+  });
+
+  // Swipe gestures: down → dismiss, up → open article
+  // Handle tap (no movement) → dismiss
+  var swipeStartY = 0;
+  var swipeDelta = 0;
+  var isSwiping = false;
+  var SWIPE_TRANSITION = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+
+  cardEl.addEventListener('touchstart', function(e) {
+    var tag = e.target.id;
+    if (tag === 'cardClose' || tag === 'readBtn') return;
+    swipeStartY = e.touches[0].clientY;
+    swipeDelta = 0;
+    isSwiping = true;
+    cardEl.style.transition = 'none';
+  }, { passive: true });
+
+  cardEl.addEventListener('touchmove', function(e) {
+    if (!isSwiping) return;
+    swipeDelta = e.touches[0].clientY - swipeStartY;
+    if (swipeDelta > 0) {
+      // Drag down freely
+      cardEl.style.transform = 'translateY(' + swipeDelta + 'px)';
+    } else {
+      // Drag up with resistance
+      cardEl.style.transform = 'translateY(' + (swipeDelta * 0.3) + 'px)';
+    }
+  }, { passive: true });
+
+  cardEl.addEventListener('touchend', function(e) {
+    if (!isSwiping) return;
+    isSwiping = false;
+
+    if (swipeDelta > 80) {
+      // Swiped down → animate off-screen then clean up
+      cardEl.style.transition = SWIPE_TRANSITION;
+      cardEl.style.transform = 'translateY(100%)';
+      setTimeout(function() { hideStoryCard(); }, 300);
+    } else if (swipeDelta < -60) {
+      // Swiped up → snap back then open article
+      cardEl.style.transition = SWIPE_TRANSITION;
+      cardEl.style.transform = 'translateY(0)';
+      openSelectedArticle();
+    } else if (Math.abs(swipeDelta) < 5) {
+      // Tap (no real drag) on handle → dismiss
+      var t = e.target;
+      if (t.id === 'handleArea' || t.classList.contains('handle-bar')) {
+        hideStoryCard();
+      } else {
+        cardEl.removeAttribute('style');
+      }
+    } else {
+      // Small drag, snap back
+      cardEl.style.transition = SWIPE_TRANSITION;
+      cardEl.style.transform = 'translateY(0)';
+      // Clean up inline styles after animation
+      setTimeout(function() { cardEl.removeAttribute('style'); }, 350);
+    }
+  }, { passive: true });
+
+  // ── Globe Init ──
+
+  function initGlobe() {
+    var container = document.getElementById('globeContainer');
+
+    globe = Globe()
+      .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+      .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+      .showAtmosphere(true)
+      .atmosphereColor('#4da6ff')
+      .atmosphereAltitude(0.18)
+      .width(container.clientWidth)
+      .height(container.clientHeight)
+      .htmlElementsData([])
+      .htmlLat('lat')
+      .htmlLng('lng')
+      .htmlAltitude(0.01)
+      .htmlElement(function(d) {
+        return createMarkerEl(d);
+      })
+      (container);
+
+    // Switch to satellite tile engine (ESRI World Imagery)
+    // Blue Marble stays as base while tiles stream in
+    try {
+      globe.globeTileEngineUrl(function(x, y, l) {
+        return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/' + l + '/' + y + '/' + x;
+      });
+      globe.globeTileEngineMaxLevel(19);
+    } catch(e) {
+      // If tile engine not supported, Blue Marble texture is already loaded
+      console.log('Tile engine not available, using static texture');
+    }
+
+    // Camera controls
+    var controls = globe.controls();
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.35;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.15;
+    controls.rotateSpeed = 0.8;
+    controls.zoomSpeed = 0.8;
+    controls.minDistance = 101;
+    controls.maxDistance = 500;
+
+    // Initial view
+    globe.pointOfView({ lat: 20, lng: 0, altitude: 2.5 });
+
+    // Report altitude changes to Android
+    var lastAlt = 2.5;
+    controls.addEventListener('change', function() {
+      var pov = globe.pointOfView();
+      if (pov && Math.abs(pov.altitude - lastAlt) > 0.1) {
+        lastAlt = pov.altitude;
+        try { Android.onZoomChanged(String(pov.altitude)); } catch(e) {}
+      }
+    });
+
+    // Auto-rotate: stop on touch, restart after idle
+    controls.addEventListener('start', function() {
+      controls.autoRotate = false;
+      if (idleTimer) clearTimeout(idleTimer);
+      // Dismiss story card when user interacts with globe
+      if (selectedStory) {
+        hideStoryCard();
+      }
+    });
+    controls.addEventListener('end', function() {
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(function() {
+        controls.autoRotate = true;
+      }, 10000);
+    });
+
+    // Handle resize
+    window.addEventListener('resize', function() {
+      globe.width(window.innerWidth).height(window.innerHeight);
+    });
+
+    // Show legend
+    legendEl.classList.add('show');
+
+    // Notify Android
+    try { Android.onGlobeReady(); } catch(e) {}
+  }
+
+  // ── Bridge functions called from Android ──
 
   window.updateMarkers = function(jsonString) {
     try {
-      currentMarkers = JSON.parse(jsonString);
-      if (!map || !map.getSource('stories')) return;
-
-      var features = [];
-      for (var i = 0; i < currentMarkers.length; i++) {
-        var m = currentMarkers[i];
-        features.push({
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [m.lng, m.lat] },
-          properties: { id: m.id, title: m.title, source: m.source, scope: m.scope }
-        });
+      allMarkers = JSON.parse(jsonString);
+      markerElements = {};
+      if (globe) {
+        globe.htmlElementsData(allMarkers);
+        var countEl = document.getElementById('storyCount');
+        countEl.textContent = allMarkers.length + ' stories worldwide';
+        countEl.classList.add('show');
       }
-
-      map.getSource('stories').setData({
-        type: 'FeatureCollection',
-        features: features
-      });
     } catch(e) {
-      console.error('Failed to update markers:', e);
+      console.error('updateMarkers error:', e);
     }
   };
 
   window.flyTo = function(lat, lng, altitude) {
-    if (!map) return;
-    var zoom = zoomFromAltitude(altitude);
-    map.flyTo({ center: [lng, lat], zoom: zoom, duration: 1500 });
+    if (!globe) return;
+    hideStoryCard();
+    globe.pointOfView({ lat: lat, lng: lng, altitude: altitude }, 1500);
   };
 
-  initMap();
+  // ── Init ──
+  initGlobe();
 })();
 </script>
 </body>

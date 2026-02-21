@@ -90,6 +90,141 @@
     "scope": "INTERNATIONAL"
   },
   {
+    "title": "OPEC+ Reaches New Oil Production Agreement",
+    "source": "Reuters",
+    "summary": "Major oil producers agree to adjust output targets to stabilize global energy markets.",
+    "url": "https://reuters.com",
+    "latitude": 24.4539,
+    "longitude": 54.3773,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Global Coral Reef Restoration Effort Launches",
+    "source": "Nature",
+    "summary": "International coalition announces billion-dollar initiative to restore damaged coral reef systems worldwide.",
+    "url": "https://nature.com",
+    "latitude": -16.5004,
+    "longitude": 145.7500,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "International Fusion Energy Breakthrough Announced",
+    "source": "Science Magazine",
+    "summary": "Research consortium achieves sustained fusion reaction, marking major milestone toward clean energy.",
+    "url": "https://sciencemag.org",
+    "latitude": 43.7102,
+    "longitude": 5.7689,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "United Nations Adopts Ocean Protection Treaty",
+    "source": "BBC News",
+    "summary": "Historic agreement to protect marine biodiversity in international waters signed by 150 nations.",
+    "url": "https://bbc.com/news",
+    "latitude": 40.7489,
+    "longitude": -73.9680,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Russia-China Trade Volume Hits New Record",
+    "source": "Reuters",
+    "summary": "Bilateral trade between Russia and China surpasses expectations, reshaping global trade patterns.",
+    "url": "https://reuters.com",
+    "latitude": 55.7558,
+    "longitude": 37.6173,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "World Bank Pledges Billions for African Infrastructure",
+    "source": "Reuters",
+    "summary": "Largest-ever development package targets roads, power grids, and digital connectivity across sub-Saharan Africa.",
+    "url": "https://reuters.com",
+    "latitude": -4.3250,
+    "longitude": 15.3222,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Antarctic Treaty Nations Agree on New Environmental Protections",
+    "source": "The Guardian",
+    "summary": "Signatory nations strengthen restrictions on commercial activity and establish new marine reserves around Antarctica.",
+    "url": "https://theguardian.com",
+    "latitude": -72.0,
+    "longitude": 2.5,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "International Court Rules on Maritime Border Dispute",
+    "source": "Al Jazeera",
+    "summary": "The Hague delivers landmark ruling on contested waters, affecting fishing rights across Southeast Asia.",
+    "url": "https://aljazeera.com",
+    "latitude": 52.0705,
+    "longitude": 4.3007,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Global AI Safety Summit Produces Historic Agreement",
+    "source": "BBC News",
+    "summary": "Forty nations sign accord establishing shared safety standards and testing requirements for frontier AI models.",
+    "url": "https://bbc.com/news",
+    "latitude": 51.5074,
+    "longitude": -0.1278,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Pacific Island Nations Form Climate Migration Pact",
+    "source": "Reuters",
+    "summary": "Twelve Pacific nations agree on framework for climate-driven population resettlement and shared resources.",
+    "url": "https://reuters.com",
+    "latitude": -17.7134,
+    "longitude": 178.0650,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "International Coffee Price Surge Hits Record Levels",
+    "source": "Bloomberg",
+    "summary": "Arabica futures spike to all-time high as droughts in Brazil and Vietnam devastate global supply.",
+    "url": "https://bloomberg.com",
+    "latitude": -14.2350,
+    "longitude": -51.9253,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "CERN Discovers New Subatomic Particle",
+    "source": "Nature",
+    "summary": "Physicists at the Large Hadron Collider confirm existence of exotic particle predicted by quantum chromodynamics.",
+    "url": "https://nature.com",
+    "latitude": 46.2333,
+    "longitude": 6.0500,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Global Plastics Treaty Finalized After Five Years of Negotiations",
+    "source": "Associated Press",
+    "summary": "Nations agree to cut plastic production by 40 percent and ban single-use plastics in coastal areas by 2035.",
+    "url": "https://apnews.com",
+    "latitude": -1.2921,
+    "longitude": 36.8219,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "Transatlantic Undersea Cable Network Expansion Announced",
+    "source": "Financial Times",
+    "summary": "Tech consortium unveils plans for six new fiber-optic cables connecting Europe, Africa, and the Americas.",
+    "url": "https://ft.com",
+    "latitude": 38.7223,
+    "longitude": -9.1393,
+    "scope": "INTERNATIONAL"
+  },
+  {
+    "title": "WHO Declares End to Global Mpox Emergency",
+    "source": "Al Jazeera",
+    "summary": "World Health Organization lifts public health emergency designation after successful worldwide vaccination campaign.",
+    "url": "https://aljazeera.com",
+    "latitude": 46.2044,
+    "longitude": 6.1432,
+    "scope": "INTERNATIONAL"
+  },
+  {
     "title": "US Federal Reserve Signals Interest Rate Decision",
     "source": "CNBC",
     "summary": "Fed chair indicates potential rate adjustments as inflation data shows mixed signals across the economy.",
@@ -204,6 +339,231 @@
     "url": "https://english.ahram.org.eg",
     "latitude": 30.0131,
     "longitude": 31.7625,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "China Unveils Next-Generation High-Speed Rail",
+    "source": "Xinhua",
+    "summary": "New maglev train reaches 600 km/h in testing, connecting Beijing to Shanghai in under two hours.",
+    "url": "https://xinhuanet.com",
+    "latitude": 39.9042,
+    "longitude": 116.4074,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Kenya Launches Digital Identity System",
+    "source": "Nation Africa",
+    "summary": "Government rolls out biometric ID program aimed at improving access to public services nationwide.",
+    "url": "https://nation.africa",
+    "latitude": -1.2921,
+    "longitude": 36.8219,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Indonesia Passes Sweeping Education Reform Bill",
+    "source": "Jakarta Post",
+    "summary": "New legislation mandates free digital textbooks and doubles teacher salaries in rural provinces.",
+    "url": "https://thejakartapost.com",
+    "latitude": -6.2088,
+    "longitude": 106.8456,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "South Africa Launches Massive Water Infrastructure Program",
+    "source": "Mail & Guardian",
+    "summary": "Government commits R200 billion to upgrade aging water systems and build new desalination plants.",
+    "url": "https://mg.co.za",
+    "latitude": -25.7479,
+    "longitude": 28.2293,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Turkey Central Bank Holds Rates Amid Inflation Battle",
+    "source": "Daily Sabah",
+    "summary": "Monetary policy committee maintains interest rates as annual inflation shows early signs of cooling.",
+    "url": "https://dailysabah.com",
+    "latitude": 39.9334,
+    "longitude": 32.8597,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Poland Invests Heavily in Baltic Sea Wind Farms",
+    "source": "Gazeta Wyborcza",
+    "summary": "Government approves construction of three offshore wind farms expected to power two million homes.",
+    "url": "https://wyborcza.pl",
+    "latitude": 52.2297,
+    "longitude": 21.0122,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Argentina Peso Stabilizes After Dollarization Debate",
+    "source": "La Nación",
+    "summary": "Currency markets calm as government announces new fiscal austerity measures and IMF agreement.",
+    "url": "https://lanacion.com.ar",
+    "latitude": -34.6037,
+    "longitude": -58.3816,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Thailand Legalizes Same-Sex Marriage",
+    "source": "Bangkok Post",
+    "summary": "Parliament passes marriage equality bill, making Thailand the first Southeast Asian nation with full legal recognition.",
+    "url": "https://bangkokpost.com",
+    "latitude": 13.7563,
+    "longitude": 100.5018,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Vietnam Becomes World's Third-Largest Electronics Exporter",
+    "source": "VnExpress",
+    "summary": "Record manufacturing output pushes Vietnam past South Korea in global electronics export rankings.",
+    "url": "https://vnexpress.net",
+    "latitude": 21.0285,
+    "longitude": 105.8542,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Colombia Signs Historic Peace Deal with ELN Rebels",
+    "source": "El Tiempo",
+    "summary": "After years of negotiations, the government and ELN guerrillas agree to permanent ceasefire and disarmament.",
+    "url": "https://eltiempo.com",
+    "latitude": 4.7110,
+    "longitude": -74.0721,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Saudi Arabia Announces Post-Oil Economic Vision Update",
+    "source": "Arab News",
+    "summary": "Crown prince unveils expanded Vision 2030 targets including new tourism mega-projects and tech investments.",
+    "url": "https://arabnews.com",
+    "latitude": 24.7136,
+    "longitude": 46.6753,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Philippines Launches National Typhoon Resilience Program",
+    "source": "Philippine Daily Inquirer",
+    "summary": "Government allocates record budget for storm-resistant infrastructure and early warning systems nationwide.",
+    "url": "https://inquirer.net",
+    "latitude": 14.5995,
+    "longitude": 120.9842,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "New Zealand Bans All Single-Use Plastics",
+    "source": "NZ Herald",
+    "summary": "Comprehensive ban takes effect covering packaging, cutlery, and containers across all retail sectors.",
+    "url": "https://nzherald.co.nz",
+    "latitude": -41.2865,
+    "longitude": 174.7762,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Ethiopia Opens Africa's Largest Industrial Park",
+    "source": "Addis Standard",
+    "summary": "New manufacturing hub outside Addis Ababa expected to create 100,000 jobs in textiles and electronics.",
+    "url": "https://addisstandard.com",
+    "latitude": 8.9806,
+    "longitude": 38.7578,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Sweden Completes Transition to Cashless Economy",
+    "source": "The Local Sweden",
+    "summary": "The Riksbank reports that physical currency now accounts for less than one percent of all transactions.",
+    "url": "https://thelocal.se",
+    "latitude": 59.3293,
+    "longitude": 18.0686,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Chile Approves New Mining Royalty Framework",
+    "source": "La Tercera",
+    "summary": "Congress passes lithium and copper royalty reform expected to fund national healthcare and education expansion.",
+    "url": "https://latercera.com",
+    "latitude": -33.4489,
+    "longitude": -70.6693,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Pakistan Launches Nationwide Solar Subsidy Program",
+    "source": "Dawn",
+    "summary": "Federal initiative offers subsidized solar panels to ten million households to reduce dependence on imported fuel.",
+    "url": "https://dawn.com",
+    "latitude": 33.6844,
+    "longitude": 73.0479,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Morocco Completes World's Largest Solar Farm Expansion",
+    "source": "Morocco World News",
+    "summary": "Noor-Ouarzazate complex reaches 2GW capacity, providing power to over three million homes.",
+    "url": "https://moroccoworldnews.com",
+    "latitude": 30.9200,
+    "longitude": -6.8936,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Ireland Becomes First Country to Fully Divest Sovereign Fund from Fossil Fuels",
+    "source": "Irish Times",
+    "summary": "Ireland Strategic Investment Fund completes full divestment, redirecting billions into renewable energy projects.",
+    "url": "https://irishtimes.com",
+    "latitude": 53.3498,
+    "longitude": -6.2603,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Bangladesh Garment Industry Adopts Living Wage Standard",
+    "source": "Dhaka Tribune",
+    "summary": "Major factory owners agree to new minimum wage following months of worker protests and international pressure.",
+    "url": "https://dhakatribune.com",
+    "latitude": 23.8103,
+    "longitude": 90.4125,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Peru Discovers New high-altitude Species in Andes",
+    "source": "El Comercio",
+    "summary": "Scientists document three new amphibian species in cloud forests previously thought to be uninhabited.",
+    "url": "https://elcomercio.pe",
+    "latitude": -12.0464,
+    "longitude": -77.0428,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Ukraine Begins Massive Reconstruction Effort",
+    "source": "Kyiv Independent",
+    "summary": "International donors fund first phase of rebuilding program focusing on housing, schools, and hospitals.",
+    "url": "https://kyivindependent.com",
+    "latitude": 50.4501,
+    "longitude": 30.5234,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Tanzania Completes Standard Gauge Railway to Landlocked Neighbors",
+    "source": "The Citizen",
+    "summary": "New rail line connects Dar es Salaam port to Rwanda and Burundi, transforming regional trade logistics.",
+    "url": "https://thecitizen.co.tz",
+    "latitude": -6.7924,
+    "longitude": 39.2083,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Finland Tops Global Education Rankings Again",
+    "source": "Helsingin Sanomat",
+    "summary": "OECD report places Finnish students first in reading and science for the third consecutive assessment.",
+    "url": "https://hs.fi",
+    "latitude": 60.1699,
+    "longitude": 24.9384,
+    "scope": "NATIONAL"
+  },
+  {
+    "title": "Cuba Opens Economy to Private Small Businesses",
+    "source": "Reuters",
+    "summary": "Landmark reform allows Cuban citizens to legally own and operate businesses in over 2,000 categories.",
+    "url": "https://reuters.com",
+    "latitude": 23.1136,
+    "longitude": -82.3666,
     "scope": "NATIONAL"
   },
   {
@@ -342,33 +702,6 @@
     "scope": "LOCAL"
   },
   {
-    "title": "OPEC+ Reaches New Oil Production Agreement",
-    "source": "Reuters",
-    "summary": "Major oil producers agree to adjust output targets to stabilize global energy markets.",
-    "url": "https://reuters.com",
-    "latitude": 24.4539,
-    "longitude": 54.3773,
-    "scope": "INTERNATIONAL"
-  },
-  {
-    "title": "Global Coral Reef Restoration Effort Launches",
-    "source": "Nature",
-    "summary": "International coalition announces billion-dollar initiative to restore damaged coral reef systems worldwide.",
-    "url": "https://nature.com",
-    "latitude": -16.5004,
-    "longitude": 145.7500,
-    "scope": "INTERNATIONAL"
-  },
-  {
-    "title": "China Unveils Next-Generation High-Speed Rail",
-    "source": "Xinhua",
-    "summary": "New maglev train reaches 600 km/h in testing, connecting Beijing to Shanghai in under two hours.",
-    "url": "https://xinhuanet.com",
-    "latitude": 39.9042,
-    "longitude": 116.4074,
-    "scope": "NATIONAL"
-  },
-  {
     "title": "Buenos Aires Launches Urban Farming Initiative",
     "source": "Clarín",
     "summary": "City government converts vacant lots into community gardens to improve food security.",
@@ -387,24 +720,6 @@
     "scope": "LOCAL"
   },
   {
-    "title": "Kenya Launches Digital Identity System",
-    "source": "Nation Africa",
-    "summary": "Government rolls out biometric ID program aimed at improving access to public services nationwide.",
-    "url": "https://nation.africa",
-    "latitude": -1.2921,
-    "longitude": 36.8219,
-    "scope": "NATIONAL"
-  },
-  {
-    "title": "International Fusion Energy Breakthrough Announced",
-    "source": "Science Magazine",
-    "summary": "Research consortium achieves sustained fusion reaction, marking major milestone toward clean energy.",
-    "url": "https://sciencemag.org",
-    "latitude": 43.7102,
-    "longitude": 5.7689,
-    "scope": "INTERNATIONAL"
-  },
-  {
     "title": "Hong Kong Completes New Airport Terminal",
     "source": "South China Morning Post",
     "summary": "Third runway system begins operations, significantly expanding the airport's capacity.",
@@ -412,15 +727,6 @@
     "latitude": 22.3080,
     "longitude": 113.9185,
     "scope": "LOCAL"
-  },
-  {
-    "title": "United Nations Adopts Ocean Protection Treaty",
-    "source": "BBC News",
-    "summary": "Historic agreement to protect marine biodiversity in international waters signed by 150 nations.",
-    "url": "https://bbc.com/news",
-    "latitude": 40.7489,
-    "longitude": -73.9680,
-    "scope": "INTERNATIONAL"
   },
   {
     "title": "Los Angeles Expands Electric Bus Fleet",
@@ -441,21 +747,597 @@
     "scope": "LOCAL"
   },
   {
-    "title": "Russia-China Trade Volume Hits New Record",
-    "source": "Reuters",
-    "summary": "Bilateral trade between Russia and China surpasses expectations, reshaping global trade patterns.",
-    "url": "https://reuters.com",
-    "latitude": 55.7558,
-    "longitude": 37.6173,
-    "scope": "INTERNATIONAL"
-  },
-  {
     "title": "Bangkok Floating Market Gets Heritage Status",
     "source": "Bangkok Post",
     "summary": "UNESCO designates Damnoen Saduak floating market as intangible cultural heritage site.",
     "url": "https://bangkokpost.com",
     "latitude": 13.5181,
     "longitude": 99.9577,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Denver Opens Nation's Largest Urban Solar Garden",
+    "source": "Denver Post",
+    "summary": "Community solar project on former industrial site provides clean energy credits to 5,000 low-income households.",
+    "url": "https://denverpost.com",
+    "latitude": 39.7392,
+    "longitude": -104.9903,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Amsterdam Bans Gasoline Cars from City Center",
+    "source": "NL Times",
+    "summary": "Dutch capital begins enforcement of zero-emission zone covering the entire historic canal ring district.",
+    "url": "https://nltimes.nl",
+    "latitude": 52.3676,
+    "longitude": 4.9041,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Rio de Janeiro Completes Favela Cable Car Network",
+    "source": "O Globo",
+    "summary": "Aerial tramway system connects five hillside communities to metro stations, cutting commute times by an hour.",
+    "url": "https://oglobo.globo.com",
+    "latitude": -22.9068,
+    "longitude": -43.1729,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Cape Town Desalination Plant Ends Water Crisis",
+    "source": "News24",
+    "summary": "New reverse-osmosis facility supplies 150 million liters daily, eliminating threat of Day Zero water cutoffs.",
+    "url": "https://news24.com",
+    "latitude": -33.9249,
+    "longitude": 18.4241,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Stockholm Opens Car-Free Neighborhood",
+    "source": "The Local Sweden",
+    "summary": "New 3,000-resident district built entirely without parking, relying on cycling and public transit.",
+    "url": "https://thelocal.se",
+    "latitude": 59.3293,
+    "longitude": 18.0686,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Osaka Breaks Ground on Expo 2025 Legacy Park",
+    "source": "Mainichi Shimbun",
+    "summary": "Yumeshima island site will become permanent innovation campus with research labs and public gardens.",
+    "url": "https://mainichi.jp",
+    "latitude": 34.6617,
+    "longitude": 135.4138,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Mexico City Inaugurates New Elevated Trolleybus Line",
+    "source": "El Universal",
+    "summary": "Electric trolleybus corridor connects eastern suburbs to downtown, serving 300,000 riders daily.",
+    "url": "https://eluniversal.com.mx",
+    "latitude": 19.4326,
+    "longitude": -99.1332,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Vancouver Approves Massive Indigenous-Led Housing Development",
+    "source": "Vancouver Sun",
+    "summary": "Squamish Nation project will build 6,000 rental units on reserve land near downtown Burrard Bridge.",
+    "url": "https://vancouversun.com",
+    "latitude": 49.2827,
+    "longitude": -123.1207,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Cairo Reopens Grand Egyptian Museum After Delays",
+    "source": "Egypt Today",
+    "summary": "Long-awaited museum near the pyramids of Giza opens with full Tutankhamun collection on permanent display.",
+    "url": "https://egypttoday.com",
+    "latitude": 29.9953,
+    "longitude": 31.1162,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Medellín Wins Global Award for Urban Transformation",
+    "source": "El Colombiano",
+    "summary": "City recognized for outdoor escalators, cable cars, and green corridors that reduced inequality and crime.",
+    "url": "https://elcolombiano.com",
+    "latitude": 6.2442,
+    "longitude": -75.5812,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Helsinki Tests Underground Autonomous Freight Network",
+    "source": "Yle News",
+    "summary": "Pilot project uses robotic carts in tunnels beneath the city to deliver packages without surface traffic.",
+    "url": "https://yle.fi",
+    "latitude": 60.1699,
+    "longitude": 24.9384,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Shanghai Opens World's Tallest Vertical Farm",
+    "source": "Sixth Tone",
+    "summary": "50-story indoor farming tower in Pudong produces lettuce, strawberries, and herbs year-round for local markets.",
+    "url": "https://sixthtone.com",
+    "latitude": 31.2304,
+    "longitude": 121.4737,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Lisbon Converts Historic Tram Network to Solar Power",
+    "source": "Público",
+    "summary": "Iconic yellow trams now run on electricity generated by rooftop solar panels along the route.",
+    "url": "https://publico.pt",
+    "latitude": 38.7223,
+    "longitude": -9.1393,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Accra Opens West Africa's First Public Bike-Share System",
+    "source": "Citi Newsroom",
+    "summary": "Fleet of 2,000 electric bikes and 150 docking stations launch across the Ghanaian capital.",
+    "url": "https://citinewsroom.com",
+    "latitude": 5.6037,
+    "longitude": -0.1870,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Bogotá Expands Ciclovía to Seven Days a Week",
+    "source": "El Tiempo",
+    "summary": "City permanently closes 120km of roads to cars, creating the world's largest daily car-free cycling network.",
+    "url": "https://eltiempo.com",
+    "latitude": 4.7110,
+    "longitude": -74.0721,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Barcelona Completes Superblock Neighborhood Redesign",
+    "source": "La Vanguardia",
+    "summary": "Eixample district finishes conversion of interior streets to pedestrian plazas with trees and playgrounds.",
+    "url": "https://lavanguardia.com",
+    "latitude": 41.3874,
+    "longitude": 2.1686,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Hanoi Opens First Metro Line After Decade of Construction",
+    "source": "VnExpress",
+    "summary": "Line 3 carries 200,000 passengers on opening day, connecting airport to old quarter in 35 minutes.",
+    "url": "https://vnexpress.net",
+    "latitude": 21.0285,
+    "longitude": 105.8542,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Addis Ababa Light Rail Doubles Capacity",
+    "source": "Ethiopian Reporter",
+    "summary": "Africa's first modern light rail extends to new suburbs and adds 40 trains to fleet.",
+    "url": "https://ethiopianreporter.com",
+    "latitude": 9.0250,
+    "longitude": 38.7469,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Milan Transforms Abandoned Rail Yards into Green District",
+    "source": "Corriere della Sera",
+    "summary": "Scalo Farini redevelopment creates 25-hectare park with affordable housing and startup incubators.",
+    "url": "https://corriere.it",
+    "latitude": 45.4942,
+    "longitude": 9.1800,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Austin Breaks Ground on New Downtown Light Rail",
+    "source": "Austin American-Statesman",
+    "summary": "Project Connect transit plan begins construction on 20-mile urban rail connecting north and south corridors.",
+    "url": "https://statesman.com",
+    "latitude": 30.2672,
+    "longitude": -97.7431,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Wellington Earthquake-Proofs Parliament Buildings",
+    "source": "Stuff NZ",
+    "summary": "New Zealand capital completes seismic strengthening of the iconic Beehive and surrounding government precinct.",
+    "url": "https://stuff.co.nz",
+    "latitude": -41.2784,
+    "longitude": 174.7756,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Kuala Lumpur Opens Southeast Asia's Largest Public Library",
+    "source": "The Star",
+    "summary": "Eight-story library in Bukit Bintang features robotic book retrieval and 500,000 volumes in four languages.",
+    "url": "https://thestar.com.my",
+    "latitude": 3.1390,
+    "longitude": 101.6869,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Lima Restores Pre-Incan Canal System for Modern Water Use",
+    "source": "El Comercio",
+    "summary": "Engineers rehabilitate 1,500-year-old aqueduct channels to recharge aquifers and reduce flood risk in the capital.",
+    "url": "https://elcomercio.pe",
+    "latitude": -12.0464,
+    "longitude": -77.0428,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Prague Completes Historic Old Town Pedestrianization",
+    "source": "Prague Morning",
+    "summary": "Cars permanently banned from streets around the Astronomical Clock, creating Europe's largest car-free historic center.",
+    "url": "https://praguemorning.cz",
+    "latitude": 50.0755,
+    "longitude": 14.4378,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Manila Bay Cleanup Achieves Swimmable Water Quality",
+    "source": "Philippine Star",
+    "summary": "Five-year rehabilitation effort brings coliform levels within safe limits for the first time in decades.",
+    "url": "https://philstar.com",
+    "latitude": 14.5547,
+    "longitude": 120.9583,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Montreal Builds North America's Largest Green Roof Network",
+    "source": "Montreal Gazette",
+    "summary": "City mandates green roofs on all new commercial buildings, creating 500 hectares of rooftop gardens.",
+    "url": "https://montrealgazette.com",
+    "latitude": 45.5017,
+    "longitude": -73.5673,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Dakar Launches Africa's First Bus Rapid Transit Electrification",
+    "source": "Le Soleil",
+    "summary": "Senegalese capital converts entire BRT fleet to electric, powered by solar installations along the corridor.",
+    "url": "https://lesoleil.sn",
+    "latitude": 14.7167,
+    "longitude": -17.4677,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Reykjavik Heats Entire City with Geothermal Energy",
+    "source": "Iceland Review",
+    "summary": "New deep-drilling project eliminates last fossil fuel heating systems in the Icelandic capital.",
+    "url": "https://icelandreview.com",
+    "latitude": 64.1466,
+    "longitude": -21.9426,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Taipei Opens High Line-Inspired Elevated Park",
+    "source": "Taipei Times",
+    "summary": "Disused railway viaduct in Zhongshan district converted into 2.5km garden walkway with night markets.",
+    "url": "https://taipeitimes.com",
+    "latitude": 25.0330,
+    "longitude": 121.5654,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Detroit Urban Renewal Creates Thousands of Manufacturing Jobs",
+    "source": "Detroit Free Press",
+    "summary": "EV battery plant and supplier campus in former auto factory brings 4,000 jobs to the city's east side.",
+    "url": "https://freep.com",
+    "latitude": 42.3314,
+    "longitude": -83.0458,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Warsaw Completes Major Vistula Riverbank Restoration",
+    "source": "Gazeta Wyborcza",
+    "summary": "Polish capital opens 10km of restored riverfront with wetlands, beaches, and cycling paths.",
+    "url": "https://wyborcza.pl",
+    "latitude": 52.2297,
+    "longitude": 21.0122,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Johannesburg Transforms Mine Dumps into Public Parks",
+    "source": "Daily Maverick",
+    "summary": "City reclaims toxic gold-mining tailings into green spaces with sports facilities and community centers.",
+    "url": "https://dailymaverick.co.za",
+    "latitude": -26.2041,
+    "longitude": 28.0473,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Athens Uncovers New Ancient Ruins During Metro Expansion",
+    "source": "Kathimerini",
+    "summary": "Construction of Line 4 reveals 2,400-year-old workshop district that will be displayed in underground museum.",
+    "url": "https://ekathimerini.com",
+    "latitude": 37.9838,
+    "longitude": 23.7275,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Chengdu Opens Giant Panda Rewilding Center",
+    "source": "China Daily",
+    "summary": "New 500-hectare facility trains captive-born pandas for release into restored Sichuan mountain habitat.",
+    "url": "https://chinadaily.com.cn",
+    "latitude": 30.5728,
+    "longitude": 104.0668,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Seattle Converts Former Highway into Waterfront Boulevard",
+    "source": "Seattle Times",
+    "summary": "Demolition of Alaskan Way Viaduct complete; new pedestrian-friendly boulevard opens along Elliott Bay.",
+    "url": "https://seattletimes.com",
+    "latitude": 47.6062,
+    "longitude": -122.3321,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Marrakech Launches Solar-Powered Medina Cooling System",
+    "source": "Morocco World News",
+    "summary": "Traditional water channel network upgraded with solar pumps to cool the historic old city during heat waves.",
+    "url": "https://moroccoworldnews.com",
+    "latitude": 31.6295,
+    "longitude": -7.9811,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Copenhagen Opens World's Most Advanced Waste-to-Energy Plant",
+    "source": "The Local Denmark",
+    "summary": "Amager Bakke facility processes 500,000 tons of waste annually with a ski slope on its roof.",
+    "url": "https://thelocal.dk",
+    "latitude": 55.6761,
+    "longitude": 12.5683,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Bangalore Launches AI-Powered Traffic Management System",
+    "source": "The Hindu",
+    "summary": "Adaptive signal control across 500 intersections reduces average commute times by 20 percent in pilot zones.",
+    "url": "https://thehindu.com",
+    "latitude": 12.9716,
+    "longitude": 77.5946,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Portland Achieves 90 Percent Waste Diversion Rate",
+    "source": "The Oregonian",
+    "summary": "Oregon city reaches recycling and composting milestone, diverting nearly all municipal waste from landfills.",
+    "url": "https://oregonlive.com",
+    "latitude": 45.5152,
+    "longitude": -122.6784,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Vienna Expands Free Public Transit for Youth",
+    "source": "Der Standard",
+    "summary": "Austrian capital extends zero-fare transit passes to all residents under 26, covering subway, bus, and tram.",
+    "url": "https://derstandard.at",
+    "latitude": 48.2082,
+    "longitude": 16.3738,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Casablanca Tram Network Reaches Full Buildout",
+    "source": "Le360",
+    "summary": "Morocco's largest city completes fourth tram line, creating 80km network serving one million daily riders.",
+    "url": "https://le360.ma",
+    "latitude": 33.5731,
+    "longitude": -7.5898,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Santiago Completes South America's Longest Urban Bike Highway",
+    "source": "La Tercera",
+    "summary": "Protected 45km cycling corridor runs from Andes foothills to western suburbs along the Mapocho River.",
+    "url": "https://latercera.com",
+    "latitude": -33.4489,
+    "longitude": -70.6693,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Dublin Breaks Ground on Cross-City Rail Tunnel",
+    "source": "Irish Times",
+    "summary": "DART Underground project begins boring twin tunnels connecting Heuston and Pearse stations beneath the city center.",
+    "url": "https://irishtimes.com",
+    "latitude": 53.3498,
+    "longitude": -6.2603,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Karachi Launches Citywide Mangrove Restoration Project",
+    "source": "Dawn",
+    "summary": "Port city plants five million mangrove seedlings along coastline to protect against flooding and erosion.",
+    "url": "https://dawn.com",
+    "latitude": 24.8607,
+    "longitude": 67.0011,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Minneapolis Opens Chain of Lakes Electric Ferry Service",
+    "source": "Star Tribune",
+    "summary": "Solar-powered ferries connect five urban lakes, offering car-free transit between parks and neighborhoods.",
+    "url": "https://startribune.com",
+    "latitude": 44.9537,
+    "longitude": -93.2650,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Zurich Tops Global Quality of Life Rankings Again",
+    "source": "Tages-Anzeiger",
+    "summary": "Swiss city earns top marks for public safety, transit, healthcare access, and green spaces per capita.",
+    "url": "https://tagesanzeiger.ch",
+    "latitude": 47.3769,
+    "longitude": 8.5417,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Ho Chi Minh City Metro Opens After Years of Delays",
+    "source": "Tuoi Tre News",
+    "summary": "Vietnam's first metro line carries 150,000 passengers on inaugural day, connecting Ben Thanh to Suoi Tien.",
+    "url": "https://tuoitrenews.vn",
+    "latitude": 10.8231,
+    "longitude": 106.6297,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Kigali Named Africa's Cleanest City for Fifth Year",
+    "source": "The New Times Rwanda",
+    "summary": "Rwandan capital's strict cleanliness policies, monthly community cleanup days, and plastic ban earn global praise.",
+    "url": "https://newtimes.co.rw",
+    "latitude": -1.9403,
+    "longitude": 29.8739,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Dubai Completes Museum of the Future Expansion",
+    "source": "Khaleej Times",
+    "summary": "Iconic torus-shaped building adds underground wing dedicated to space exploration and quantum computing exhibits.",
+    "url": "https://khaleejtimes.com",
+    "latitude": 25.2204,
+    "longitude": 55.2796,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Edinburgh Festival Fringe Breaks Attendance Records",
+    "source": "The Scotsman",
+    "summary": "World's largest arts festival draws 3.5 million visitors with 4,000 shows across 300 venues.",
+    "url": "https://scotsman.com",
+    "latitude": 55.9533,
+    "longitude": -3.1883,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Guadalajara Opens Latin America's Largest Public Tech Lab",
+    "source": "Informador",
+    "summary": "Free makerspace offers 3D printers, laser cutters, and robotics workshops to 10,000 residents weekly.",
+    "url": "https://informador.mx",
+    "latitude": 20.6597,
+    "longitude": -103.3496,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Perth Completes Indian Ocean Desalination Expansion",
+    "source": "West Australian",
+    "summary": "New plant powered entirely by wind energy doubles the city's drought-proof water supply capacity.",
+    "url": "https://thewest.com.au",
+    "latitude": -31.9505,
+    "longitude": 115.8605,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Tallinn Expands Free Public Transit to All Residents",
+    "source": "ERR News",
+    "summary": "Estonian capital extends its pioneering fare-free policy from buses to trams and ferries.",
+    "url": "https://news.err.ee",
+    "latitude": 59.4370,
+    "longitude": 24.7536,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Dhaka Launches River Cleanup and Water Taxi Network",
+    "source": "Dhaka Tribune",
+    "summary": "Electric water taxis begin service on the Buriganga River after major pollution remediation effort.",
+    "url": "https://dhakatribune.com",
+    "latitude": 23.8103,
+    "longitude": 90.4125,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Anchorage Builds North America's Largest Urban Wildlife Corridor",
+    "source": "Anchorage Daily News",
+    "summary": "Network of overpasses and tunnels allows moose, bears, and other wildlife to cross highways safely.",
+    "url": "https://adn.com",
+    "latitude": 61.2181,
+    "longitude": -149.9003,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Kyoto Restores Ancient Bamboo Forest Walking Paths",
+    "source": "Asahi Shimbun",
+    "summary": "Arashiyama district completes three-year restoration of traditional stone paths through the iconic bamboo groves.",
+    "url": "https://asahi.com",
+    "latitude": 35.0116,
+    "longitude": 135.7681,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Lagos Opens First Dedicated Tech District",
+    "source": "TechCabal",
+    "summary": "Yaba Innovation Campus provides subsidized office space, gigabit internet, and mentorship to 500 startups.",
+    "url": "https://techcabal.com",
+    "latitude": 6.5130,
+    "longitude": 3.3784,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Havana Begins Restoration of Historic Art Deco District",
+    "source": "OnCuba News",
+    "summary": "International funding supports preservation of 200 mid-century buildings in the Vedado neighborhood.",
+    "url": "https://oncubanews.com",
+    "latitude": 23.1136,
+    "longitude": -82.3666,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Oslo Becomes First Capital to Remove All Downtown Parking",
+    "source": "Aftenposten",
+    "summary": "Norwegian capital converts remaining 700 city-center parking spots to bike lanes, benches, and micro-parks.",
+    "url": "https://aftenposten.no",
+    "latitude": 59.9139,
+    "longitude": 10.7522,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Shenzhen Achieves Full Electric Vehicle Bus Fleet",
+    "source": "China Daily",
+    "summary": "Southern Chinese tech hub now operates 16,000 electric buses, the world's largest zero-emission fleet.",
+    "url": "https://chinadaily.com.cn",
+    "latitude": 22.5431,
+    "longitude": 114.0579,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "São Paulo Transforms Elevated Highway into Linear Park",
+    "source": "Folha de São Paulo",
+    "summary": "Minhocão viaduct permanently closes to traffic and reopens as 3.5km elevated garden and cultural space.",
+    "url": "https://folha.uol.com.br",
+    "latitude": -23.5505,
+    "longitude": -46.6333,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Auckland Completes Harbor Crossing Cycling Bridge",
+    "source": "NZ Herald",
+    "summary": "New 2km bridge parallel to the harbor gives cyclists and pedestrians a dedicated link to the North Shore.",
+    "url": "https://nzherald.co.nz",
+    "latitude": -36.8485,
+    "longitude": 174.7633,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Muscat Unveils Oman's First Solar-Desalination Mega-Plant",
+    "source": "Times of Oman",
+    "summary": "Facility uses concentrated solar power to desalinate seawater without fossil fuels, supplying the capital region.",
+    "url": "https://timesofoman.com",
+    "latitude": 23.5880,
+    "longitude": 58.3829,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Budapest Thermal Baths Launch Zero-Waste Initiative",
+    "source": "Budapest Times",
+    "summary": "Historic Széchenyi and Gellért baths eliminate single-use plastics and recapture waste heat for city district.",
+    "url": "https://budapesttimes.hu",
+    "latitude": 47.4979,
+    "longitude": 19.0402,
+    "scope": "LOCAL"
+  },
+  {
+    "title": "Abidjan Skyline Transformed by Africa's Tallest Building",
+    "source": "Jeune Afrique",
+    "summary": "65-story tower in Plateau district houses offices, hotel, and observation deck overlooking the lagoon.",
+    "url": "https://jeuneafrique.com",
+    "latitude": 5.3600,
+    "longitude": -4.0083,
     "scope": "LOCAL"
   }
 ]

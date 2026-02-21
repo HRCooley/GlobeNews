@@ -1,6 +1,7 @@
 package com.globenews.data
 
 import android.content.Context
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -85,6 +86,7 @@ class NewsRepository(private val context: Context) {
         val apiStories = try {
             fetchFromApi()
         } catch (e: Exception) {
+            Log.e("NewsRepository", "Failed to fetch news from API", e)
             emptyList()
         }
 
